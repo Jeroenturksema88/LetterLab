@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Nunito } from 'next/font/google';
+import AudioOntgrendelaar from '@/components/audio/AudioOntgrendelaar';
 import './globals.css';
 
 const nunito = Nunito({
@@ -35,7 +36,9 @@ export default function RootLayout({
   return (
     <html lang="nl" className={`${nunito.variable} h-full`}>
       <body className="h-full font-kind bg-warm-bg text-[#4A3728] overflow-hidden">
-        {children}
+        <AudioOntgrendelaar>
+          {children}
+        </AudioOntgrendelaar>
       </body>
     </html>
   );

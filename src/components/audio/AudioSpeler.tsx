@@ -18,6 +18,9 @@ export function useAudioSpeler(audioAan: boolean = true) {
 
     function laadStemmen() {
       const stemmen = synthRef.current?.getVoices() ?? [];
+
+      // Zoek de beste Nederlandse stem
+      // Op iPad Safari is "Ellen" (nl-NL) de standaard en klinkt goed
       const nlStem =
         stemmen.find((s) => s.lang === 'nl-NL' && s.localService) ||
         stemmen.find((s) => s.lang === 'nl-NL') ||
@@ -30,9 +33,16 @@ export function useAudioSpeler(audioAan: boolean = true) {
     }
 
     laadStemmen();
+
+    // Op sommige browsers (Chrome) worden stemmen async geladen
     synthRef.current?.addEventListener('voiceschanged', laadStemmen);
+
+    // iOS Safari laadt stemmen soms pas na een korte vertraging
+    const timer = setTimeout(laadStemmen, 500);
+
     return () => {
       synthRef.current?.removeEventListener('voiceschanged', laadStemmen);
+      clearTimeout(timer);
     };
   }, []);
 
@@ -41,17 +51,48 @@ export function useAudioSpeler(audioAan: boolean = true) {
       if (!audioAan || !synthRef.current) return Promise.resolve();
 
       return new Promise((resolve) => {
-        synthRef.current!.cancel();
-        const uiting = new SpeechSynthesisUtterance(tekst);
-        uiting.lang = 'nl-NL';
-        uiting.rate = 0.85;
-        uiting.pitch = 1.1;
-        if (stemRef.current) {
-          uiting.voice = stemRef.current;
-        }
-        uiting.onend = () => resolve();
-        uiting.onerror = () => resolve();
-        synthRef.current!.speak(uiting);
+        const synth = synthRef.current!;
+
+        // iOS Safari fix: cancel eventuele hangende spraak eerst
+        synth.cancel();
+
+        // Korte vertraging na cancel zodat iOS Safari de state reset
+        setTimeout(() => {
+          const uiting = new SpeechSynthesisUtterance(tekst);
+          uiting.lang = 'nl-NL';
+          uiting.rate = 0.85;
+          uiting.pitch = 1.1;
+          uiting.volume = 1;
+
+          if (stemRef.current) {
+            uiting.voice = stemRef.current;
+          }
+
+          uiting.onend = () => resolve();
+          uiting.onerror = () => resolve();
+
+          // iOS Safari bug: speechSynthesis kan pauzeren na 15 sec
+          // Workaround: hervat elke 10 seconden
+          const hervatTimer = setInterval(() => {
+            if (synth.speaking && synth.paused) {
+              synth.resume();
+            }
+            if (!synth.speaking) {
+              clearInterval(hervatTimer);
+            }
+          }, 10000);
+
+          uiting.onend = () => {
+            clearInterval(hervatTimer);
+            resolve();
+          };
+          uiting.onerror = () => {
+            clearInterval(hervatTimer);
+            resolve();
+          };
+
+          synth.speak(uiting);
+        }, 50);
       });
     },
     [audioAan]
@@ -72,6 +113,7 @@ export function useAudioSpeler(audioAan: boolean = true) {
       // Probeer pre-recorded audio eerst
       try {
         const audio = new Audio(`/audio/${categorie}/${itemId}/${type}.mp3`);
+        audio.volume = 1;
         await audio.play();
         return;
       } catch {
