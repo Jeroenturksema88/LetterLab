@@ -30,7 +30,9 @@ export default function VormenOverzicht() {
     <div className="h-full flex flex-col">
       <div className="flex items-center gap-4 px-4 py-3 bg-white/50">
         <TerugKnop href="/" />
-        <h2 className="text-2xl font-extrabold text-vorm-kleur">Vormen</h2>
+        <div className="w-8 h-8 rounded-full bg-vorm-kleur/20 flex items-center justify-center">
+          <div className="w-4 h-4 rounded-full bg-vorm-kleur" />
+        </div>
       </div>
       <div className="flex-1 overflow-hidden">
         <ItemGrid

@@ -31,7 +31,9 @@ export default function LettersOverzicht() {
     <div className="h-full flex flex-col">
       <div className="flex items-center gap-4 px-4 py-3 bg-white/50">
         <TerugKnop href="/" />
-        <h2 className="text-2xl font-extrabold text-letter-kleur">Letters</h2>
+        <div className="w-8 h-8 rounded-full bg-letter-kleur/20 flex items-center justify-center">
+          <div className="w-4 h-4 rounded-full bg-letter-kleur" />
+        </div>
       </div>
       <div className="flex-1 overflow-hidden">
         <ItemGrid
