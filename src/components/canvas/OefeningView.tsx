@@ -8,6 +8,7 @@ import { svgPadNaarPunten } from '@/lib/pad-normalisatie';
 import { useInstellingenStore } from '@/stores/instellingen-store';
 import TemplateCanvas from './TemplateCanvas';
 import TekenCanvas from './TekenCanvas';
+import type { TekenCanvasActies } from './TekenCanvas';
 import StrokePad from './StrokePad';
 import BeloningAnimatie from '../feedback/BeloningAnimatie';
 import FeedbackOverlay from '../feedback/FeedbackOverlay';
@@ -75,6 +76,14 @@ function NiveauBolletjes({ niveau, kleur }: { niveau: Niveau; kleur: string }) {
   );
 }
 
+// --- Lijndikte-opties ---
+
+const LIJN_DIKTES = [
+  { dikte: 6, label: 'dun', weergaveDiameter: 8 },
+  { dikte: 12, label: 'normaal', weergaveDiameter: 14 },
+  { dikte: 20, label: 'dik', weergaveDiameter: 22 },
+];
+
 export default function OefeningView({
   item,
   niveau,
@@ -87,8 +96,22 @@ export default function OefeningView({
   const [toonBeloning, setToonBeloning] = useState(false);
   const [beloningType, setBeloningType] = useState<'sparkle' | 'ster' | 'confetti'>('sparkle');
   const [disabled, setDisabled] = useState(false);
+  const [tekenKleur, setTekenKleur] = useState(item.kleur);
+  const [lijnDikte, setLijnDikte] = useState(12);
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
-  const tekenCanvasRef = useRef<HTMLCanvasElement>(null);
+  const tekenCanvasRef = useRef<TekenCanvasActies>(null);
+
+  // Kleurenpalet voor de kleurkiezer
+  const TEKEN_KLEUREN = useMemo(() => [
+    item.kleur,       // Standaard categorie-kleur
+    '#EF4444',        // Rood
+    '#F59E0B',        // Oranje/amber
+    '#10B981',        // Groen
+    '#3B82F6',        // Blauw
+    '#8B5CF6',        // Paars
+    '#EC4899',        // Roze
+    '#06B6D4',        // Cyaan
+  ], [item.kleur]);
 
   // Responsieve canvas-afmetingen op basis van venstergrootte
   const [vensterGrootte, setVensterGrootte] = useState({ breedte: 1024, hoogte: 768 });
@@ -255,11 +278,8 @@ export default function OefeningView({
     setFeedback(null);
     setToonBeloning(false);
     setDisabled(false);
-    // Wis canvas
-    const canvas = tekenCanvasRef.current;
-    if (canvas && (canvas as any).wisAlles) {
-      (canvas as any).wisAlles();
-    }
+    // Wis canvas via de imperative handle
+    tekenCanvasRef.current?.wisAlles();
   }, []);
 
   const handleVolgende = useCallback(() => {
@@ -268,18 +288,12 @@ export default function OefeningView({
 
   const handleWis = useCallback(() => {
     setStreken([]);
-    const canvas = tekenCanvasRef.current;
-    if (canvas && (canvas as any).wisAlles) {
-      (canvas as any).wisAlles();
-    }
+    tekenCanvasRef.current?.wisAlles();
   }, []);
 
   const handleUndo = useCallback(() => {
     setStreken((prev) => prev.slice(0, -1));
-    const canvas = tekenCanvasRef.current;
-    if (canvas && (canvas as any).ongedaanMaken) {
-      (canvas as any).ongedaanMaken();
-    }
+    tekenCanvasRef.current?.ongedaanMaken();
   }, []);
 
   // Opruimen timer bij unmount
@@ -401,9 +415,11 @@ export default function OefeningView({
 
           {/* Interactieve tekenlaag */}
           <TekenCanvas
+            ref={tekenCanvasRef}
             breedte={canvasBreedte}
             hoogte={canvasHoogte}
-            kleur={item.kleur}
+            kleur={tekenKleur}
+            lijnDikte={lijnDikte}
             onStreekKlaar={handleStreekKlaar}
             disabled={disabled}
           />
@@ -414,6 +430,62 @@ export default function OefeningView({
             zichtbaar={toonBeloning}
             onKlaar={() => setToonBeloning(false)}
           />
+        </div>
+      </div>
+
+      {/* Kleur- en diktekiezer */}
+      <div className="flex items-center justify-center gap-6 py-2">
+        {/* Kleurkiezer */}
+        <div className="flex items-center gap-2">
+          {TEKEN_KLEUREN.map((kleur) => (
+            <motion.button
+              key={kleur}
+              onClick={() => setTekenKleur(kleur)}
+              className="rounded-full flex-shrink-0"
+              style={{
+                width: 28,
+                height: 28,
+                backgroundColor: kleur,
+                border: tekenKleur === kleur ? '3px solid #4A3728' : '3px solid white',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
+              }}
+              whileTap={{ scale: 0.85 }}
+              animate={{ scale: tekenKleur === kleur ? 1.15 : 1 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+              aria-label={`Kleur ${kleur}`}
+            />
+          ))}
+        </div>
+
+        {/* Scheiding */}
+        <div className="w-px h-6 bg-gray-200" />
+
+        {/* Diktekiezer */}
+        <div className="flex items-center gap-3">
+          {LIJN_DIKTES.map(({ dikte, label, weergaveDiameter }) => (
+            <motion.button
+              key={dikte}
+              onClick={() => setLijnDikte(dikte)}
+              className="flex items-center justify-center"
+              style={{
+                width: 28,
+                height: 28,
+              }}
+              whileTap={{ scale: 0.85 }}
+              aria-label={`Lijndikte ${label}`}
+            >
+              <div
+                className="rounded-full"
+                style={{
+                  width: weergaveDiameter,
+                  height: weergaveDiameter,
+                  backgroundColor: tekenKleur,
+                  border: lijnDikte === dikte ? '2px solid #4A3728' : '2px solid transparent',
+                  boxShadow: lijnDikte === dikte ? '0 0 0 1px #4A3728' : 'none',
+                }}
+              />
+            </motion.button>
+          ))}
         </div>
       </div>
 
