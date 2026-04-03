@@ -1,0 +1,460 @@
+{
+  "letters": {
+    "a": {
+      "intro": "Dit is de letter A. A is van Aap!",
+      "niveau1_instructie": "Trek de letter A na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de A en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een A tekenen?",
+      "succes": "Super! Dat is de letter A!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de A helemaal geleerd!"
+    },
+    "b": {
+      "intro": "Dit is de letter B. B is van Beer!",
+      "niveau1_instructie": "Trek de letter B na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de B en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een B tekenen?",
+      "succes": "Super! Dat is de letter B!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de B helemaal geleerd!"
+    },
+    "c": {
+      "intro": "Dit is de letter C. C is van Clown!",
+      "niveau1_instructie": "Trek de letter C na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de C en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een C tekenen?",
+      "succes": "Super! Dat is de letter C!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de C helemaal geleerd!"
+    },
+    "d": {
+      "intro": "Dit is de letter D. D is van Dino!",
+      "niveau1_instructie": "Trek de letter D na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de D en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een D tekenen?",
+      "succes": "Super! Dat is de letter D!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de D helemaal geleerd!"
+    },
+    "e": {
+      "intro": "Dit is de letter E. E is van Eend!",
+      "niveau1_instructie": "Trek de letter E na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de E en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een E tekenen?",
+      "succes": "Super! Dat is de letter E!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de E helemaal geleerd!"
+    },
+    "f": {
+      "intro": "Dit is de letter F. F is van Fiets!",
+      "niveau1_instructie": "Trek de letter F na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de F en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een F tekenen?",
+      "succes": "Super! Dat is de letter F!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de F helemaal geleerd!"
+    },
+    "g": {
+      "intro": "Dit is de letter G. G is van Giraf!",
+      "niveau1_instructie": "Trek de letter G na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de G en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een G tekenen?",
+      "succes": "Super! Dat is de letter G!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de G helemaal geleerd!"
+    },
+    "h": {
+      "intro": "Dit is de letter H. H is van Hond!",
+      "niveau1_instructie": "Trek de letter H na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de H en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een H tekenen?",
+      "succes": "Super! Dat is de letter H!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de H helemaal geleerd!"
+    },
+    "i": {
+      "intro": "Dit is de letter I. I is van IJsje!",
+      "niveau1_instructie": "Trek de letter I na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de I en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een I tekenen?",
+      "succes": "Super! Dat is de letter I!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de I helemaal geleerd!"
+    },
+    "j": {
+      "intro": "Dit is de letter J. J is van Juf!",
+      "niveau1_instructie": "Trek de letter J na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de J en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een J tekenen?",
+      "succes": "Super! Dat is de letter J!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de J helemaal geleerd!"
+    },
+    "k": {
+      "intro": "Dit is de letter K. K is van Kat!",
+      "niveau1_instructie": "Trek de letter K na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de K en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een K tekenen?",
+      "succes": "Super! Dat is de letter K!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de K helemaal geleerd!"
+    },
+    "l": {
+      "intro": "Dit is de letter L. L is van Leeuw!",
+      "niveau1_instructie": "Trek de letter L na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de L en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een L tekenen?",
+      "succes": "Super! Dat is de letter L!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de L helemaal geleerd!"
+    },
+    "m": {
+      "intro": "Dit is de letter M. M is van Mama!",
+      "niveau1_instructie": "Trek de letter M na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de M en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een M tekenen?",
+      "succes": "Super! Dat is de letter M!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de M helemaal geleerd!"
+    },
+    "n": {
+      "intro": "Dit is de letter N. N is van Nore!",
+      "niveau1_instructie": "Trek de letter N na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de N en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een N tekenen?",
+      "succes": "Super! Dat is de letter N!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de N helemaal geleerd!"
+    },
+    "o": {
+      "intro": "Dit is de letter O. O is van Olifant!",
+      "niveau1_instructie": "Trek de letter O na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de O en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een O tekenen?",
+      "succes": "Super! Dat is de letter O!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de O helemaal geleerd!"
+    },
+    "p": {
+      "intro": "Dit is de letter P. P is van Papa!",
+      "niveau1_instructie": "Trek de letter P na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de P en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een P tekenen?",
+      "succes": "Super! Dat is de letter P!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de P helemaal geleerd!"
+    },
+    "q": {
+      "intro": "Dit is de letter Q. Q is van Quiz!",
+      "niveau1_instructie": "Trek de letter Q na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de Q en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een Q tekenen?",
+      "succes": "Super! Dat is de letter Q!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de Q helemaal geleerd!"
+    },
+    "r": {
+      "intro": "Dit is de letter R. R is van Raket!",
+      "niveau1_instructie": "Trek de letter R na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de R en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een R tekenen?",
+      "succes": "Super! Dat is de letter R!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de R helemaal geleerd!"
+    },
+    "s": {
+      "intro": "Dit is de letter S. S is van Slang!",
+      "niveau1_instructie": "Trek de letter S na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de S en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een S tekenen?",
+      "succes": "Super! Dat is de letter S!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de S helemaal geleerd!"
+    },
+    "t": {
+      "intro": "Dit is de letter T. T is van Trein!",
+      "niveau1_instructie": "Trek de letter T na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de T en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een T tekenen?",
+      "succes": "Super! Dat is de letter T!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de T helemaal geleerd!"
+    },
+    "u": {
+      "intro": "Dit is de letter U. U is van Uil!",
+      "niveau1_instructie": "Trek de letter U na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de U en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een U tekenen?",
+      "succes": "Super! Dat is de letter U!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de U helemaal geleerd!"
+    },
+    "v": {
+      "intro": "Dit is de letter V. V is van Vis!",
+      "niveau1_instructie": "Trek de letter V na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de V en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een V tekenen?",
+      "succes": "Super! Dat is de letter V!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de V helemaal geleerd!"
+    },
+    "w": {
+      "intro": "Dit is de letter W. W is van Walvis!",
+      "niveau1_instructie": "Trek de letter W na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de W en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een W tekenen?",
+      "succes": "Super! Dat is de letter W!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de W helemaal geleerd!"
+    },
+    "x": {
+      "intro": "Dit is de letter X. X is van Xylofoon!",
+      "niveau1_instructie": "Trek de letter X na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de X en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een X tekenen?",
+      "succes": "Super! Dat is de letter X!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de X helemaal geleerd!"
+    },
+    "y": {
+      "intro": "Dit is de letter Y. Y is van Yoghurt!",
+      "niveau1_instructie": "Trek de letter Y na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de Y en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een Y tekenen?",
+      "succes": "Super! Dat is de letter Y!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de Y helemaal geleerd!"
+    },
+    "z": {
+      "intro": "Dit is de letter Z. Z is van Zebra!",
+      "niveau1_instructie": "Trek de letter Z na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de Z en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een Z tekenen?",
+      "succes": "Super! Dat is de letter Z!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de Z helemaal geleerd!"
+    }
+  },
+  "cijfers": {
+    "0": {
+      "intro": "Dit is het cijfer nul. Nul is niks, helemaal leeg!",
+      "niveau1_instructie": "Trek de nul na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de nul en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een nul tekenen?",
+      "succes": "Super! Dat is de nul!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de nul helemaal geleerd!"
+    },
+    "1": {
+      "intro": "Dit is het cijfer één. Eén vinger!",
+      "niveau1_instructie": "Trek de één na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de één en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een één tekenen?",
+      "succes": "Super! Dat is de één!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de één helemaal geleerd!"
+    },
+    "2": {
+      "intro": "Dit is het cijfer twee. Twee ogen!",
+      "niveau1_instructie": "Trek de twee na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de twee en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een twee tekenen?",
+      "succes": "Super! Dat is de twee!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de twee helemaal geleerd!"
+    },
+    "3": {
+      "intro": "Dit is het cijfer drie. Drie vingers!",
+      "niveau1_instructie": "Trek de drie na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de drie en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een drie tekenen?",
+      "succes": "Super! Dat is de drie!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de drie helemaal geleerd!"
+    },
+    "4": {
+      "intro": "Dit is het cijfer vier. Vier poten van een hond!",
+      "niveau1_instructie": "Trek de vier na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de vier en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een vier tekenen?",
+      "succes": "Super! Dat is de vier!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de vier helemaal geleerd!"
+    },
+    "5": {
+      "intro": "Dit is het cijfer vijf. Vijf vingers aan je hand!",
+      "niveau1_instructie": "Trek de vijf na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de vijf en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een vijf tekenen?",
+      "succes": "Super! Dat is de vijf!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de vijf helemaal geleerd!"
+    },
+    "6": {
+      "intro": "Dit is het cijfer zes. Zes pootjes van een lieveheersbeestje!",
+      "niveau1_instructie": "Trek de zes na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de zes en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een zes tekenen?",
+      "succes": "Super! Dat is de zes!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de zes helemaal geleerd!"
+    },
+    "7": {
+      "intro": "Dit is het cijfer zeven. Zeven dagen in een week!",
+      "niveau1_instructie": "Trek de zeven na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de zeven en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een zeven tekenen?",
+      "succes": "Super! Dat is de zeven!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de zeven helemaal geleerd!"
+    },
+    "8": {
+      "intro": "Dit is het cijfer acht. Acht armen van een octopus!",
+      "niveau1_instructie": "Trek de acht na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de acht en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een acht tekenen?",
+      "succes": "Super! Dat is de acht!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de acht helemaal geleerd!"
+    },
+    "9": {
+      "intro": "Dit is het cijfer negen. Bijna tien!",
+      "niveau1_instructie": "Trek de negen na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de negen en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een negen tekenen?",
+      "succes": "Super! Dat is de negen!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de negen helemaal geleerd!"
+    },
+    "10": {
+      "intro": "Dit is het cijfer tien. Alle vingers van twee handen!",
+      "niveau1_instructie": "Trek de tien na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de tien en schrijf hem zelf!",
+      "niveau3_instructie": "Kun je een tien tekenen?",
+      "succes": "Super! Dat is de tien!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je hebt de tien helemaal geleerd!"
+    }
+  },
+  "vormen": {
+    "cirkel": {
+      "intro": "Dit is een cirkel. Een cirkel is helemaal rond!",
+      "niveau1_instructie": "Trek de cirkel na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de cirkel en teken hem zelf!",
+      "niveau3_instructie": "Kun je een cirkel tekenen?",
+      "succes": "Super! Dat is een mooie cirkel!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je kunt een cirkel tekenen!"
+    },
+    "vierkant": {
+      "intro": "Dit is een vierkant. Een vierkant heeft vier gelijke zijden!",
+      "niveau1_instructie": "Trek het vierkant na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar het vierkant en teken het zelf!",
+      "niveau3_instructie": "Kun je een vierkant tekenen?",
+      "succes": "Super! Dat is een mooi vierkant!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je kunt een vierkant tekenen!"
+    },
+    "driehoek": {
+      "intro": "Dit is een driehoek. Een driehoek heeft drie hoeken!",
+      "niveau1_instructie": "Trek de driehoek na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de driehoek en teken hem zelf!",
+      "niveau3_instructie": "Kun je een driehoek tekenen?",
+      "succes": "Super! Dat is een mooie driehoek!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je kunt een driehoek tekenen!"
+    },
+    "ster": {
+      "intro": "Dit is een ster. Een ster schittert aan de hemel!",
+      "niveau1_instructie": "Trek de ster na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de ster en teken hem zelf!",
+      "niveau3_instructie": "Kun je een ster tekenen?",
+      "succes": "Super! Dat is een mooie ster!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je kunt een ster tekenen!"
+    },
+    "hart": {
+      "intro": "Dit is een hart. Een hart betekent liefde!",
+      "niveau1_instructie": "Trek het hart na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar het hart en teken het zelf!",
+      "niveau3_instructie": "Kun je een hart tekenen?",
+      "succes": "Super! Dat is een mooi hart!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je kunt een hart tekenen!"
+    },
+    "ovaal": {
+      "intro": "Dit is een ovaal. Een ovaal lijkt op een ei!",
+      "niveau1_instructie": "Trek de ovaal na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de ovaal en teken hem zelf!",
+      "niveau3_instructie": "Kun je een ovaal tekenen?",
+      "succes": "Super! Dat is een mooie ovaal!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je kunt een ovaal tekenen!"
+    },
+    "ruit": {
+      "intro": "Dit is een ruit. Een ruit is een schuinstaand vierkant!",
+      "niveau1_instructie": "Trek de ruit na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de ruit en teken hem zelf!",
+      "niveau3_instructie": "Kun je een ruit tekenen?",
+      "succes": "Super! Dat is een mooie ruit!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je kunt een ruit tekenen!"
+    },
+    "halve-maan": {
+      "intro": "Dit is een halve maan. De maan schijnt 's nachts!",
+      "niveau1_instructie": "Trek de halve maan na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de halve maan en teken hem zelf!",
+      "niveau3_instructie": "Kun je een halve maan tekenen?",
+      "succes": "Super! Dat is een mooie halve maan!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je kunt een halve maan tekenen!"
+    },
+    "kruis": {
+      "intro": "Dit is een kruis. Een kruis heeft twee strepen!",
+      "niveau1_instructie": "Trek het kruis na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar het kruis en teken het zelf!",
+      "niveau3_instructie": "Kun je een kruis tekenen?",
+      "succes": "Super! Dat is een mooi kruis!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je kunt een kruis tekenen!"
+    },
+    "pijl": {
+      "intro": "Dit is een pijl. Een pijl wijst de weg!",
+      "niveau1_instructie": "Trek de pijl na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de pijl en teken hem zelf!",
+      "niveau3_instructie": "Kun je een pijl tekenen?",
+      "succes": "Super! Dat is een mooie pijl!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je kunt een pijl tekenen!"
+    },
+    "spiraal": {
+      "intro": "Dit is een spiraal. Een spiraal draait rond en rond!",
+      "niveau1_instructie": "Trek de spiraal na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de spiraal en teken hem zelf!",
+      "niveau3_instructie": "Kun je een spiraal tekenen?",
+      "succes": "Super! Dat is een mooie spiraal!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je kunt een spiraal tekenen!"
+    },
+    "golf": {
+      "intro": "Dit is een golf. Een golf beweegt op en neer!",
+      "niveau1_instructie": "Trek de golf na over de stipjes!",
+      "niveau2_instructie": "Kijk goed naar de golf en teken hem zelf!",
+      "niveau3_instructie": "Kun je een golf tekenen?",
+      "succes": "Super! Dat is een mooie golf!",
+      "aanmoediging": "Bijna! Probeer het nog een keer!",
+      "voltooiing": "Wauw, je kunt een golf tekenen!"
+    }
+  },
+  "generiek": {
+    "welkom": "Hallo! Wat wil je vandaag leren?",
+    "kies_letters": "Letters!",
+    "kies_cijfers": "Cijfers!",
+    "kies_vormen": "Vormen!",
+    "nog_een_keer": "Wil je het nog een keer proberen?",
+    "volgende": "Op naar de volgende!",
+    "klaar_voor_vandaag": "Goed gedaan vandaag! Tot de volgende keer!",
+    "categorie_klaar": "Wauw! Je hebt alles gedaan! Wat knap!",
+    "sessie_pauze": "Zullen we even stoppen? Je hebt heel hard gewerkt!"
+  }
+}

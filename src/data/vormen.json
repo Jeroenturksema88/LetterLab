@@ -1,0 +1,329 @@
+[
+  {
+    "id": "cirkel",
+    "categorie": "vormen",
+    "label": "Cirkel",
+    "paden": [
+      "M 100 20 A 80 80 0 1 1 99.9 20 Z"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 100, "y": 20 },
+        "eindPunt": { "x": 100, "y": 20 },
+        "tussenPunten": [
+          { "x": 20, "y": 100 },
+          { "x": 100, "y": 180 },
+          { "x": 180, "y": 100 }
+        ],
+        "padData": "M 100 20 A 80 80 0 1 1 99.9 20 Z"
+      }
+    ],
+    "boundingBox": { "x": 20, "y": 20, "breedte": 160, "hoogte": 160 },
+    "kleur": "#10B981"
+  },
+  {
+    "id": "vierkant",
+    "categorie": "vormen",
+    "label": "Vierkant",
+    "paden": [
+      "M 30 30 L 170 30 L 170 170 L 30 170 Z"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 30, "y": 30 },
+        "eindPunt": { "x": 170, "y": 30 },
+        "tussenPunten": [],
+        "padData": "M 30 30 L 170 30"
+      },
+      {
+        "startPunt": { "x": 170, "y": 30 },
+        "eindPunt": { "x": 170, "y": 170 },
+        "tussenPunten": [],
+        "padData": "M 170 30 L 170 170"
+      },
+      {
+        "startPunt": { "x": 170, "y": 170 },
+        "eindPunt": { "x": 30, "y": 170 },
+        "tussenPunten": [],
+        "padData": "M 170 170 L 30 170"
+      },
+      {
+        "startPunt": { "x": 30, "y": 170 },
+        "eindPunt": { "x": 30, "y": 30 },
+        "tussenPunten": [],
+        "padData": "M 30 170 L 30 30"
+      }
+    ],
+    "boundingBox": { "x": 30, "y": 30, "breedte": 140, "hoogte": 140 },
+    "kleur": "#10B981"
+  },
+  {
+    "id": "driehoek",
+    "categorie": "vormen",
+    "label": "Driehoek",
+    "paden": [
+      "M 100 20 L 180 170 L 20 170 Z"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 100, "y": 20 },
+        "eindPunt": { "x": 180, "y": 170 },
+        "tussenPunten": [],
+        "padData": "M 100 20 L 180 170"
+      },
+      {
+        "startPunt": { "x": 180, "y": 170 },
+        "eindPunt": { "x": 20, "y": 170 },
+        "tussenPunten": [],
+        "padData": "M 180 170 L 20 170"
+      },
+      {
+        "startPunt": { "x": 20, "y": 170 },
+        "eindPunt": { "x": 100, "y": 20 },
+        "tussenPunten": [],
+        "padData": "M 20 170 L 100 20"
+      }
+    ],
+    "boundingBox": { "x": 20, "y": 20, "breedte": 160, "hoogte": 150 },
+    "kleur": "#10B981"
+  },
+  {
+    "id": "ster",
+    "categorie": "vormen",
+    "label": "Ster",
+    "paden": [
+      "M 100 15 L 120 75 L 185 75 L 132 115 L 152 175 L 100 140 L 48 175 L 68 115 L 15 75 L 80 75 Z"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 100, "y": 15 },
+        "eindPunt": { "x": 100, "y": 15 },
+        "tussenPunten": [
+          { "x": 120, "y": 75 },
+          { "x": 185, "y": 75 },
+          { "x": 132, "y": 115 },
+          { "x": 152, "y": 175 },
+          { "x": 100, "y": 140 },
+          { "x": 48, "y": 175 },
+          { "x": 68, "y": 115 },
+          { "x": 15, "y": 75 },
+          { "x": 80, "y": 75 }
+        ],
+        "padData": "M 100 15 L 120 75 L 185 75 L 132 115 L 152 175 L 100 140 L 48 175 L 68 115 L 15 75 L 80 75 Z"
+      }
+    ],
+    "boundingBox": { "x": 15, "y": 15, "breedte": 170, "hoogte": 160 },
+    "kleur": "#10B981"
+  },
+  {
+    "id": "hart",
+    "categorie": "vormen",
+    "label": "Hart",
+    "paden": [
+      "M 100 180 C 20 120 10 60 50 40 C 70 30 95 40 100 65 C 105 40 130 30 150 40 C 190 60 180 120 100 180 Z"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 100, "y": 65 },
+        "eindPunt": { "x": 100, "y": 180 },
+        "tussenPunten": [
+          { "x": 50, "y": 40 },
+          { "x": 10, "y": 60 },
+          { "x": 20, "y": 120 }
+        ],
+        "padData": "M 100 65 C 95 40 70 30 50 40 C 10 60 20 120 100 180"
+      },
+      {
+        "startPunt": { "x": 100, "y": 65 },
+        "eindPunt": { "x": 100, "y": 180 },
+        "tussenPunten": [
+          { "x": 150, "y": 40 },
+          { "x": 190, "y": 60 },
+          { "x": 180, "y": 120 }
+        ],
+        "padData": "M 100 65 C 105 40 130 30 150 40 C 190 60 180 120 100 180"
+      }
+    ],
+    "boundingBox": { "x": 10, "y": 30, "breedte": 180, "hoogte": 150 },
+    "kleur": "#10B981"
+  },
+  {
+    "id": "ovaal",
+    "categorie": "vormen",
+    "label": "Ovaal",
+    "paden": [
+      "M 100 30 A 70 70 0 0 1 100 170 A 70 70 0 0 1 100 30 Z"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 100, "y": 30 },
+        "eindPunt": { "x": 100, "y": 30 },
+        "tussenPunten": [
+          { "x": 30, "y": 100 },
+          { "x": 100, "y": 170 },
+          { "x": 170, "y": 100 }
+        ],
+        "padData": "M 100 30 Q 30 30 30 100 Q 30 170 100 170 Q 170 170 170 100 Q 170 30 100 30 Z"
+      }
+    ],
+    "boundingBox": { "x": 30, "y": 30, "breedte": 140, "hoogte": 140 },
+    "kleur": "#10B981"
+  },
+  {
+    "id": "ruit",
+    "categorie": "vormen",
+    "label": "Ruit",
+    "paden": [
+      "M 100 20 L 180 100 L 100 180 L 20 100 Z"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 100, "y": 20 },
+        "eindPunt": { "x": 180, "y": 100 },
+        "tussenPunten": [],
+        "padData": "M 100 20 L 180 100"
+      },
+      {
+        "startPunt": { "x": 180, "y": 100 },
+        "eindPunt": { "x": 100, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 180 100 L 100 180"
+      },
+      {
+        "startPunt": { "x": 100, "y": 180 },
+        "eindPunt": { "x": 20, "y": 100 },
+        "tussenPunten": [],
+        "padData": "M 100 180 L 20 100"
+      },
+      {
+        "startPunt": { "x": 20, "y": 100 },
+        "eindPunt": { "x": 100, "y": 20 },
+        "tussenPunten": [],
+        "padData": "M 20 100 L 100 20"
+      }
+    ],
+    "boundingBox": { "x": 20, "y": 20, "breedte": 160, "hoogte": 160 },
+    "kleur": "#10B981"
+  },
+  {
+    "id": "halve-maan",
+    "categorie": "vormen",
+    "label": "Halve maan",
+    "paden": [
+      "M 120 20 A 80 80 0 1 0 120 180 A 50 80 0 1 1 120 20 Z"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 120, "y": 20 },
+        "eindPunt": { "x": 120, "y": 20 },
+        "tussenPunten": [
+          { "x": 40, "y": 20 },
+          { "x": 40, "y": 180 },
+          { "x": 120, "y": 180 },
+          { "x": 120, "y": 100 }
+        ],
+        "padData": "M 120 20 A 80 80 0 1 0 120 180 A 50 80 0 1 1 120 20 Z"
+      }
+    ],
+    "boundingBox": { "x": 40, "y": 20, "breedte": 80, "hoogte": 160 },
+    "kleur": "#10B981"
+  },
+  {
+    "id": "kruis",
+    "categorie": "vormen",
+    "label": "Kruis",
+    "paden": [
+      "M 100 20 L 100 180",
+      "M 20 100 L 180 100"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 100, "y": 20 },
+        "eindPunt": { "x": 100, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 100 20 L 100 180"
+      },
+      {
+        "startPunt": { "x": 20, "y": 100 },
+        "eindPunt": { "x": 180, "y": 100 },
+        "tussenPunten": [],
+        "padData": "M 20 100 L 180 100"
+      }
+    ],
+    "boundingBox": { "x": 20, "y": 20, "breedte": 160, "hoogte": 160 },
+    "kleur": "#10B981"
+  },
+  {
+    "id": "pijl",
+    "categorie": "vormen",
+    "label": "Pijl",
+    "paden": [
+      "M 100 20 L 170 90 L 130 90 L 130 180 L 70 180 L 70 90 L 30 90 Z"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 70, "y": 180 },
+        "eindPunt": { "x": 130, "y": 180 },
+        "tussenPunten": [
+          { "x": 70, "y": 90 },
+          { "x": 30, "y": 90 },
+          { "x": 100, "y": 20 },
+          { "x": 170, "y": 90 },
+          { "x": 130, "y": 90 }
+        ],
+        "padData": "M 70 180 L 70 90 L 30 90 L 100 20 L 170 90 L 130 90 L 130 180"
+      }
+    ],
+    "boundingBox": { "x": 30, "y": 20, "breedte": 140, "hoogte": 160 },
+    "kleur": "#10B981"
+  },
+  {
+    "id": "spiraal",
+    "categorie": "vormen",
+    "label": "Spiraal",
+    "paden": [
+      "M 100 100 Q 100 80 120 80 Q 150 80 150 110 Q 150 150 100 150 Q 40 150 40 100 Q 40 40 100 40 Q 170 40 170 110 Q 170 180 100 180"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 100, "y": 100 },
+        "eindPunt": { "x": 100, "y": 180 },
+        "tussenPunten": [
+          { "x": 120, "y": 80 },
+          { "x": 150, "y": 110 },
+          { "x": 100, "y": 150 },
+          { "x": 40, "y": 100 },
+          { "x": 100, "y": 40 },
+          { "x": 170, "y": 110 }
+        ],
+        "padData": "M 100 100 Q 100 80 120 80 Q 150 80 150 110 Q 150 150 100 150 Q 40 150 40 100 Q 40 40 100 40 Q 170 40 170 110 Q 170 180 100 180"
+      }
+    ],
+    "boundingBox": { "x": 40, "y": 40, "breedte": 130, "hoogte": 140 },
+    "kleur": "#10B981"
+  },
+  {
+    "id": "golf",
+    "categorie": "vormen",
+    "label": "Golf",
+    "paden": [
+      "M 20 100 Q 50 40 80 100 Q 110 160 140 100 Q 170 40 190 100"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 20, "y": 100 },
+        "eindPunt": { "x": 190, "y": 100 },
+        "tussenPunten": [
+          { "x": 50, "y": 40 },
+          { "x": 80, "y": 100 },
+          { "x": 110, "y": 160 },
+          { "x": 140, "y": 100 },
+          { "x": 170, "y": 40 }
+        ],
+        "padData": "M 20 100 Q 50 40 80 100 Q 110 160 140 100 Q 170 40 190 100"
+      }
+    ],
+    "boundingBox": { "x": 20, "y": 40, "breedte": 170, "hoogte": 120 },
+    "kleur": "#10B981"
+  }
+]

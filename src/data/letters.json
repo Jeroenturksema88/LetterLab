@@ -1,0 +1,773 @@
+[
+  {
+    "id": "a",
+    "categorie": "letters",
+    "label": "A",
+    "paden": [
+      "M 40 180 L 100 20 L 160 180",
+      "M 65 120 L 135 120"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 40, "y": 180 },
+        "eindPunt": { "x": 100, "y": 20 },
+        "tussenPunten": [],
+        "padData": "M 40 180 L 100 20"
+      },
+      {
+        "startPunt": { "x": 100, "y": 20 },
+        "eindPunt": { "x": 160, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 100 20 L 160 180"
+      },
+      {
+        "startPunt": { "x": 65, "y": 120 },
+        "eindPunt": { "x": 135, "y": 120 },
+        "tussenPunten": [],
+        "padData": "M 65 120 L 135 120"
+      }
+    ],
+    "boundingBox": { "x": 40, "y": 20, "breedte": 120, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "b",
+    "categorie": "letters",
+    "label": "B",
+    "paden": [
+      "M 50 20 L 50 180",
+      "M 50 20 L 120 20 Q 160 20 160 55 Q 160 90 120 100 L 50 100 L 120 100 Q 165 100 165 135 Q 165 180 120 180 L 50 180"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 50, "y": 20 },
+        "eindPunt": { "x": 50, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 50 20 L 50 180"
+      },
+      {
+        "startPunt": { "x": 50, "y": 20 },
+        "eindPunt": { "x": 50, "y": 180 },
+        "tussenPunten": [
+          { "x": 120, "y": 20 },
+          { "x": 160, "y": 55 },
+          { "x": 120, "y": 100 },
+          { "x": 50, "y": 100 },
+          { "x": 120, "y": 100 },
+          { "x": 165, "y": 135 },
+          { "x": 120, "y": 180 }
+        ],
+        "padData": "M 50 20 L 120 20 Q 160 20 160 55 Q 160 90 120 100 L 50 100 L 120 100 Q 165 100 165 135 Q 165 180 120 180 L 50 180"
+      }
+    ],
+    "boundingBox": { "x": 50, "y": 20, "breedte": 115, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "c",
+    "categorie": "letters",
+    "label": "C",
+    "paden": [
+      "M 160 50 Q 160 20 120 20 L 80 20 Q 40 20 40 60 L 40 140 Q 40 180 80 180 L 120 180 Q 160 180 160 150"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 160, "y": 50 },
+        "eindPunt": { "x": 160, "y": 150 },
+        "tussenPunten": [
+          { "x": 120, "y": 20 },
+          { "x": 80, "y": 20 },
+          { "x": 40, "y": 60 },
+          { "x": 40, "y": 140 },
+          { "x": 80, "y": 180 },
+          { "x": 120, "y": 180 }
+        ],
+        "padData": "M 160 50 Q 160 20 120 20 L 80 20 Q 40 20 40 60 L 40 140 Q 40 180 80 180 L 120 180 Q 160 180 160 150"
+      }
+    ],
+    "boundingBox": { "x": 40, "y": 20, "breedte": 120, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "d",
+    "categorie": "letters",
+    "label": "D",
+    "paden": [
+      "M 50 20 L 50 180",
+      "M 50 20 L 110 20 Q 160 20 160 60 L 160 140 Q 160 180 110 180 L 50 180"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 50, "y": 20 },
+        "eindPunt": { "x": 50, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 50 20 L 50 180"
+      },
+      {
+        "startPunt": { "x": 50, "y": 20 },
+        "eindPunt": { "x": 50, "y": 180 },
+        "tussenPunten": [
+          { "x": 110, "y": 20 },
+          { "x": 160, "y": 60 },
+          { "x": 160, "y": 140 },
+          { "x": 110, "y": 180 }
+        ],
+        "padData": "M 50 20 L 110 20 Q 160 20 160 60 L 160 140 Q 160 180 110 180 L 50 180"
+      }
+    ],
+    "boundingBox": { "x": 50, "y": 20, "breedte": 110, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "e",
+    "categorie": "letters",
+    "label": "E",
+    "paden": [
+      "M 50 20 L 50 180",
+      "M 50 20 L 150 20",
+      "M 50 100 L 130 100",
+      "M 50 180 L 150 180"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 50, "y": 20 },
+        "eindPunt": { "x": 50, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 50 20 L 50 180"
+      },
+      {
+        "startPunt": { "x": 50, "y": 20 },
+        "eindPunt": { "x": 150, "y": 20 },
+        "tussenPunten": [],
+        "padData": "M 50 20 L 150 20"
+      },
+      {
+        "startPunt": { "x": 50, "y": 100 },
+        "eindPunt": { "x": 130, "y": 100 },
+        "tussenPunten": [],
+        "padData": "M 50 100 L 130 100"
+      },
+      {
+        "startPunt": { "x": 50, "y": 180 },
+        "eindPunt": { "x": 150, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 50 180 L 150 180"
+      }
+    ],
+    "boundingBox": { "x": 50, "y": 20, "breedte": 100, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "f",
+    "categorie": "letters",
+    "label": "F",
+    "paden": [
+      "M 50 20 L 50 180",
+      "M 50 20 L 150 20",
+      "M 50 100 L 130 100"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 50, "y": 20 },
+        "eindPunt": { "x": 50, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 50 20 L 50 180"
+      },
+      {
+        "startPunt": { "x": 50, "y": 20 },
+        "eindPunt": { "x": 150, "y": 20 },
+        "tussenPunten": [],
+        "padData": "M 50 20 L 150 20"
+      },
+      {
+        "startPunt": { "x": 50, "y": 100 },
+        "eindPunt": { "x": 130, "y": 100 },
+        "tussenPunten": [],
+        "padData": "M 50 100 L 130 100"
+      }
+    ],
+    "boundingBox": { "x": 50, "y": 20, "breedte": 100, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "g",
+    "categorie": "letters",
+    "label": "G",
+    "paden": [
+      "M 160 50 Q 160 20 120 20 L 80 20 Q 40 20 40 60 L 40 140 Q 40 180 80 180 L 120 180 Q 160 180 160 140 L 160 110 L 120 110"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 160, "y": 50 },
+        "eindPunt": { "x": 120, "y": 110 },
+        "tussenPunten": [
+          { "x": 120, "y": 20 },
+          { "x": 80, "y": 20 },
+          { "x": 40, "y": 60 },
+          { "x": 40, "y": 140 },
+          { "x": 80, "y": 180 },
+          { "x": 120, "y": 180 },
+          { "x": 160, "y": 140 },
+          { "x": 160, "y": 110 }
+        ],
+        "padData": "M 160 50 Q 160 20 120 20 L 80 20 Q 40 20 40 60 L 40 140 Q 40 180 80 180 L 120 180 Q 160 180 160 140 L 160 110 L 120 110"
+      }
+    ],
+    "boundingBox": { "x": 40, "y": 20, "breedte": 120, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "h",
+    "categorie": "letters",
+    "label": "H",
+    "paden": [
+      "M 50 20 L 50 180",
+      "M 150 20 L 150 180",
+      "M 50 100 L 150 100"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 50, "y": 20 },
+        "eindPunt": { "x": 50, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 50 20 L 50 180"
+      },
+      {
+        "startPunt": { "x": 150, "y": 20 },
+        "eindPunt": { "x": 150, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 150 20 L 150 180"
+      },
+      {
+        "startPunt": { "x": 50, "y": 100 },
+        "eindPunt": { "x": 150, "y": 100 },
+        "tussenPunten": [],
+        "padData": "M 50 100 L 150 100"
+      }
+    ],
+    "boundingBox": { "x": 50, "y": 20, "breedte": 100, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "i",
+    "categorie": "letters",
+    "label": "I",
+    "paden": [
+      "M 60 20 L 140 20",
+      "M 100 20 L 100 180",
+      "M 60 180 L 140 180"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 60, "y": 20 },
+        "eindPunt": { "x": 140, "y": 20 },
+        "tussenPunten": [],
+        "padData": "M 60 20 L 140 20"
+      },
+      {
+        "startPunt": { "x": 100, "y": 20 },
+        "eindPunt": { "x": 100, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 100 20 L 100 180"
+      },
+      {
+        "startPunt": { "x": 60, "y": 180 },
+        "eindPunt": { "x": 140, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 60 180 L 140 180"
+      }
+    ],
+    "boundingBox": { "x": 60, "y": 20, "breedte": 80, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "j",
+    "categorie": "letters",
+    "label": "J",
+    "paden": [
+      "M 60 20 L 150 20",
+      "M 120 20 L 120 150 Q 120 180 90 180 Q 60 180 60 150"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 60, "y": 20 },
+        "eindPunt": { "x": 150, "y": 20 },
+        "tussenPunten": [],
+        "padData": "M 60 20 L 150 20"
+      },
+      {
+        "startPunt": { "x": 120, "y": 20 },
+        "eindPunt": { "x": 60, "y": 150 },
+        "tussenPunten": [
+          { "x": 120, "y": 150 },
+          { "x": 90, "y": 180 }
+        ],
+        "padData": "M 120 20 L 120 150 Q 120 180 90 180 Q 60 180 60 150"
+      }
+    ],
+    "boundingBox": { "x": 60, "y": 20, "breedte": 90, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "k",
+    "categorie": "letters",
+    "label": "K",
+    "paden": [
+      "M 50 20 L 50 180",
+      "M 150 20 L 50 100 L 150 180"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 50, "y": 20 },
+        "eindPunt": { "x": 50, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 50 20 L 50 180"
+      },
+      {
+        "startPunt": { "x": 150, "y": 20 },
+        "eindPunt": { "x": 150, "y": 180 },
+        "tussenPunten": [
+          { "x": 50, "y": 100 }
+        ],
+        "padData": "M 150 20 L 50 100 L 150 180"
+      }
+    ],
+    "boundingBox": { "x": 50, "y": 20, "breedte": 100, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "l",
+    "categorie": "letters",
+    "label": "L",
+    "paden": [
+      "M 50 20 L 50 180",
+      "M 50 180 L 150 180"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 50, "y": 20 },
+        "eindPunt": { "x": 50, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 50 20 L 50 180"
+      },
+      {
+        "startPunt": { "x": 50, "y": 180 },
+        "eindPunt": { "x": 150, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 50 180 L 150 180"
+      }
+    ],
+    "boundingBox": { "x": 50, "y": 20, "breedte": 100, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "m",
+    "categorie": "letters",
+    "label": "M",
+    "paden": [
+      "M 30 180 L 30 20 L 100 100 L 170 20 L 170 180"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 30, "y": 180 },
+        "eindPunt": { "x": 30, "y": 20 },
+        "tussenPunten": [],
+        "padData": "M 30 180 L 30 20"
+      },
+      {
+        "startPunt": { "x": 30, "y": 20 },
+        "eindPunt": { "x": 100, "y": 100 },
+        "tussenPunten": [],
+        "padData": "M 30 20 L 100 100"
+      },
+      {
+        "startPunt": { "x": 100, "y": 100 },
+        "eindPunt": { "x": 170, "y": 20 },
+        "tussenPunten": [],
+        "padData": "M 100 100 L 170 20"
+      },
+      {
+        "startPunt": { "x": 170, "y": 20 },
+        "eindPunt": { "x": 170, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 170 20 L 170 180"
+      }
+    ],
+    "boundingBox": { "x": 30, "y": 20, "breedte": 140, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "n",
+    "categorie": "letters",
+    "label": "N",
+    "paden": [
+      "M 50 180 L 50 20 L 150 180 L 150 20"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 50, "y": 180 },
+        "eindPunt": { "x": 50, "y": 20 },
+        "tussenPunten": [],
+        "padData": "M 50 180 L 50 20"
+      },
+      {
+        "startPunt": { "x": 50, "y": 20 },
+        "eindPunt": { "x": 150, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 50 20 L 150 180"
+      },
+      {
+        "startPunt": { "x": 150, "y": 180 },
+        "eindPunt": { "x": 150, "y": 20 },
+        "tussenPunten": [],
+        "padData": "M 150 180 L 150 20"
+      }
+    ],
+    "boundingBox": { "x": 50, "y": 20, "breedte": 100, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "o",
+    "categorie": "letters",
+    "label": "O",
+    "paden": [
+      "M 100 20 Q 40 20 40 100 Q 40 180 100 180 Q 160 180 160 100 Q 160 20 100 20 Z"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 100, "y": 20 },
+        "eindPunt": { "x": 100, "y": 20 },
+        "tussenPunten": [
+          { "x": 40, "y": 20 },
+          { "x": 40, "y": 100 },
+          { "x": 40, "y": 180 },
+          { "x": 100, "y": 180 },
+          { "x": 160, "y": 180 },
+          { "x": 160, "y": 100 },
+          { "x": 160, "y": 20 }
+        ],
+        "padData": "M 100 20 Q 40 20 40 100 Q 40 180 100 180 Q 160 180 160 100 Q 160 20 100 20 Z"
+      }
+    ],
+    "boundingBox": { "x": 40, "y": 20, "breedte": 120, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "p",
+    "categorie": "letters",
+    "label": "P",
+    "paden": [
+      "M 50 180 L 50 20",
+      "M 50 20 L 120 20 Q 160 20 160 55 Q 160 100 120 100 L 50 100"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 50, "y": 180 },
+        "eindPunt": { "x": 50, "y": 20 },
+        "tussenPunten": [],
+        "padData": "M 50 180 L 50 20"
+      },
+      {
+        "startPunt": { "x": 50, "y": 20 },
+        "eindPunt": { "x": 50, "y": 100 },
+        "tussenPunten": [
+          { "x": 120, "y": 20 },
+          { "x": 160, "y": 55 },
+          { "x": 120, "y": 100 }
+        ],
+        "padData": "M 50 20 L 120 20 Q 160 20 160 55 Q 160 100 120 100 L 50 100"
+      }
+    ],
+    "boundingBox": { "x": 50, "y": 20, "breedte": 110, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "q",
+    "categorie": "letters",
+    "label": "Q",
+    "paden": [
+      "M 100 20 Q 40 20 40 100 Q 40 180 100 180 Q 160 180 160 100 Q 160 20 100 20 Z",
+      "M 120 140 L 165 185"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 100, "y": 20 },
+        "eindPunt": { "x": 100, "y": 20 },
+        "tussenPunten": [
+          { "x": 40, "y": 20 },
+          { "x": 40, "y": 100 },
+          { "x": 40, "y": 180 },
+          { "x": 100, "y": 180 },
+          { "x": 160, "y": 180 },
+          { "x": 160, "y": 100 },
+          { "x": 160, "y": 20 }
+        ],
+        "padData": "M 100 20 Q 40 20 40 100 Q 40 180 100 180 Q 160 180 160 100 Q 160 20 100 20 Z"
+      },
+      {
+        "startPunt": { "x": 120, "y": 140 },
+        "eindPunt": { "x": 165, "y": 185 },
+        "tussenPunten": [],
+        "padData": "M 120 140 L 165 185"
+      }
+    ],
+    "boundingBox": { "x": 40, "y": 20, "breedte": 125, "hoogte": 165 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "r",
+    "categorie": "letters",
+    "label": "R",
+    "paden": [
+      "M 50 180 L 50 20",
+      "M 50 20 L 120 20 Q 160 20 160 55 Q 160 100 120 100 L 50 100",
+      "M 110 100 L 160 180"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 50, "y": 180 },
+        "eindPunt": { "x": 50, "y": 20 },
+        "tussenPunten": [],
+        "padData": "M 50 180 L 50 20"
+      },
+      {
+        "startPunt": { "x": 50, "y": 20 },
+        "eindPunt": { "x": 50, "y": 100 },
+        "tussenPunten": [
+          { "x": 120, "y": 20 },
+          { "x": 160, "y": 55 },
+          { "x": 120, "y": 100 }
+        ],
+        "padData": "M 50 20 L 120 20 Q 160 20 160 55 Q 160 100 120 100 L 50 100"
+      },
+      {
+        "startPunt": { "x": 110, "y": 100 },
+        "eindPunt": { "x": 160, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 110 100 L 160 180"
+      }
+    ],
+    "boundingBox": { "x": 50, "y": 20, "breedte": 110, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "s",
+    "categorie": "letters",
+    "label": "S",
+    "paden": [
+      "M 150 50 Q 150 20 110 20 L 90 20 Q 50 20 50 55 Q 50 90 100 100 Q 150 110 150 145 Q 150 180 110 180 L 90 180 Q 50 180 50 150"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 150, "y": 50 },
+        "eindPunt": { "x": 50, "y": 150 },
+        "tussenPunten": [
+          { "x": 110, "y": 20 },
+          { "x": 90, "y": 20 },
+          { "x": 50, "y": 55 },
+          { "x": 100, "y": 100 },
+          { "x": 150, "y": 145 },
+          { "x": 110, "y": 180 },
+          { "x": 90, "y": 180 }
+        ],
+        "padData": "M 150 50 Q 150 20 110 20 L 90 20 Q 50 20 50 55 Q 50 90 100 100 Q 150 110 150 145 Q 150 180 110 180 L 90 180 Q 50 180 50 150"
+      }
+    ],
+    "boundingBox": { "x": 50, "y": 20, "breedte": 100, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "t",
+    "categorie": "letters",
+    "label": "T",
+    "paden": [
+      "M 30 20 L 170 20",
+      "M 100 20 L 100 180"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 30, "y": 20 },
+        "eindPunt": { "x": 170, "y": 20 },
+        "tussenPunten": [],
+        "padData": "M 30 20 L 170 20"
+      },
+      {
+        "startPunt": { "x": 100, "y": 20 },
+        "eindPunt": { "x": 100, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 100 20 L 100 180"
+      }
+    ],
+    "boundingBox": { "x": 30, "y": 20, "breedte": 140, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "u",
+    "categorie": "letters",
+    "label": "U",
+    "paden": [
+      "M 50 20 L 50 140 Q 50 180 100 180 Q 150 180 150 140 L 150 20"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 50, "y": 20 },
+        "eindPunt": { "x": 150, "y": 20 },
+        "tussenPunten": [
+          { "x": 50, "y": 140 },
+          { "x": 100, "y": 180 },
+          { "x": 150, "y": 140 }
+        ],
+        "padData": "M 50 20 L 50 140 Q 50 180 100 180 Q 150 180 150 140 L 150 20"
+      }
+    ],
+    "boundingBox": { "x": 50, "y": 20, "breedte": 100, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "v",
+    "categorie": "letters",
+    "label": "V",
+    "paden": [
+      "M 40 20 L 100 180 L 160 20"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 40, "y": 20 },
+        "eindPunt": { "x": 100, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 40 20 L 100 180"
+      },
+      {
+        "startPunt": { "x": 100, "y": 180 },
+        "eindPunt": { "x": 160, "y": 20 },
+        "tussenPunten": [],
+        "padData": "M 100 180 L 160 20"
+      }
+    ],
+    "boundingBox": { "x": 40, "y": 20, "breedte": 120, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "w",
+    "categorie": "letters",
+    "label": "W",
+    "paden": [
+      "M 20 20 L 60 180 L 100 80 L 140 180 L 180 20"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 20, "y": 20 },
+        "eindPunt": { "x": 60, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 20 20 L 60 180"
+      },
+      {
+        "startPunt": { "x": 60, "y": 180 },
+        "eindPunt": { "x": 100, "y": 80 },
+        "tussenPunten": [],
+        "padData": "M 60 180 L 100 80"
+      },
+      {
+        "startPunt": { "x": 100, "y": 80 },
+        "eindPunt": { "x": 140, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 100 80 L 140 180"
+      },
+      {
+        "startPunt": { "x": 140, "y": 180 },
+        "eindPunt": { "x": 180, "y": 20 },
+        "tussenPunten": [],
+        "padData": "M 140 180 L 180 20"
+      }
+    ],
+    "boundingBox": { "x": 20, "y": 20, "breedte": 160, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "x",
+    "categorie": "letters",
+    "label": "X",
+    "paden": [
+      "M 40 20 L 160 180",
+      "M 160 20 L 40 180"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 40, "y": 20 },
+        "eindPunt": { "x": 160, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 40 20 L 160 180"
+      },
+      {
+        "startPunt": { "x": 160, "y": 20 },
+        "eindPunt": { "x": 40, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 160 20 L 40 180"
+      }
+    ],
+    "boundingBox": { "x": 40, "y": 20, "breedte": 120, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "y",
+    "categorie": "letters",
+    "label": "Y",
+    "paden": [
+      "M 40 20 L 100 100",
+      "M 160 20 L 100 100",
+      "M 100 100 L 100 180"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 40, "y": 20 },
+        "eindPunt": { "x": 100, "y": 100 },
+        "tussenPunten": [],
+        "padData": "M 40 20 L 100 100"
+      },
+      {
+        "startPunt": { "x": 160, "y": 20 },
+        "eindPunt": { "x": 100, "y": 100 },
+        "tussenPunten": [],
+        "padData": "M 160 20 L 100 100"
+      },
+      {
+        "startPunt": { "x": 100, "y": 100 },
+        "eindPunt": { "x": 100, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 100 100 L 100 180"
+      }
+    ],
+    "boundingBox": { "x": 40, "y": 20, "breedte": 120, "hoogte": 160 },
+    "kleur": "#6366F1"
+  },
+  {
+    "id": "z",
+    "categorie": "letters",
+    "label": "Z",
+    "paden": [
+      "M 40 20 L 160 20 L 40 180 L 160 180"
+    ],
+    "streken": [
+      {
+        "startPunt": { "x": 40, "y": 20 },
+        "eindPunt": { "x": 160, "y": 20 },
+        "tussenPunten": [],
+        "padData": "M 40 20 L 160 20"
+      },
+      {
+        "startPunt": { "x": 160, "y": 20 },
+        "eindPunt": { "x": 40, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 160 20 L 40 180"
+      },
+      {
+        "startPunt": { "x": 40, "y": 180 },
+        "eindPunt": { "x": 160, "y": 180 },
+        "tussenPunten": [],
+        "padData": "M 40 180 L 160 180"
+      }
+    ],
+    "boundingBox": { "x": 40, "y": 20, "breedte": 120, "hoogte": 160 },
+    "kleur": "#6366F1"
+  }
+]

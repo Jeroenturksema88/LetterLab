@@ -1,0 +1,22 @@
+{
+  "name": "LetterLab",
+  "short_name": "LetterLab",
+  "description": "Leer letters, cijfers en vormen schrijven!",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#FFF8F0",
+  "theme_color": "#6366F1",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
