@@ -132,10 +132,87 @@ function ZweefDecoratie({ vorm }: { vorm: ZweefVorm }) {
 
 export default function Startscherm() {
   const router = useRouter();
+  const { profielIngesteld, naam } = useProfielStore();
 
   const handleCategorieKlik = (categorie: Categorie) => {
     router.push(`/${categorie}`);
   };
+
+  // Als het profiel nog niet is ingesteld, toon een vriendelijke startknop
+  if (!profielIngesteld) {
+    return (
+      <div className="h-full relative overflow-hidden flex flex-col items-center justify-center gap-12 p-8">
+        {/* Achtergrond — zachte warme gradient */}
+        <div
+          className="absolute inset-0 -z-10"
+          style={{
+            background: 'radial-gradient(ellipse at 50% 40%, #FFF8F0 0%, #FFF0E0 50%, #FFE8D0 100%)',
+          }}
+        />
+
+        {/* Zwevende decoratieve vormen op de achtergrond */}
+        {ACHTERGROND_VORMEN.map((vorm, i) => (
+          <ZweefDecoratie key={i} vorm={vorm} />
+        ))}
+
+        {/* Titel */}
+        <motion.div
+          className="text-center relative z-10"
+          initial={{ y: -40, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.7, type: 'spring', stiffness: 120 }}
+        >
+          <h1 className="text-6xl md:text-7xl font-extrabold font-kind select-none flex items-baseline justify-center">
+            {TITEL_LETTERS.map((item, i) => (
+              <motion.span
+                key={i}
+                style={{
+                  color: item.kleur,
+                  display: 'inline-block',
+                }}
+                initial={{ rotate: 0, y: 10, opacity: 0 }}
+                animate={{
+                  rotate: item.rotatie,
+                  y: 0,
+                  opacity: 1,
+                }}
+                transition={{
+                  delay: 0.1 + i * 0.06,
+                  type: 'spring',
+                  stiffness: 200,
+                  damping: 12,
+                }}
+              >
+                {item.letter}
+              </motion.span>
+            ))}
+          </h1>
+        </motion.div>
+
+        {/* Grote start-knop die naar profielinstelling navigeert */}
+        <motion.button
+          onClick={() => router.push('/profiel')}
+          className="relative z-10 flex items-center justify-center rounded-full cursor-pointer outline-none focus:outline-none"
+          style={{
+            width: 140,
+            height: 140,
+            background: 'linear-gradient(135deg, #34D399 0%, #10B981 50%, #059669 100%)',
+            border: '5px solid rgba(255,255,255,0.7)',
+            boxShadow: '0 12px 40px -6px rgba(16, 185, 129, 0.45), inset 0 3px 6px rgba(255,255,255,0.4)',
+          }}
+          whileTap={{ scale: 0.88 }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.6, type: 'spring', stiffness: 180, damping: 14 }}
+        >
+          {/* Grote speelknop (driehoek / play) */}
+          <svg width="52" height="52" viewBox="0 0 24 24" fill="white" stroke="none">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </motion.button>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full relative overflow-hidden flex flex-col items-center justify-center gap-12 p-8">
@@ -151,6 +228,22 @@ export default function Startscherm() {
       {ACHTERGROND_VORMEN.map((vorm, i) => (
         <ZweefDecoratie key={i} vorm={vorm} />
       ))}
+
+      {/* Naam van het kind — decoratief in de linkerbovenhoek */}
+      {naam && (
+        <motion.div
+          className="absolute top-5 left-6 z-20 text-lg font-semibold select-none"
+          style={{
+            color: '#C4A46B',
+            textShadow: '0 1px 2px rgba(0,0,0,0.05)',
+          }}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
+        >
+          {naam}
+        </motion.div>
+      )}
 
       {/* Titel — speelse gekleurde letters met individuele rotatie */}
       <motion.div

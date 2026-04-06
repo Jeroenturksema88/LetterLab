@@ -9,9 +9,9 @@ import { useProfielStore } from '@/stores/profiel-store';
 
 export default function ProfielPagina() {
   const router = useRouter();
-  const { setNaam, setGeslacht, markeerProfielIngesteld, geslacht } = useProfielStore();
+  const { setNaam, setGeslacht, markeerProfielIngesteld, geslacht, naam } = useProfielStore();
   const [gekozenGeslacht, setGekozenGeslacht] = useState<'jongen' | 'meisje' | null>(geslacht);
-  const [invoerNaam, setInvoerNaam] = useState('');
+  const [invoerNaam, setInvoerNaam] = useState(naam || '');
 
   const handleBevestig = () => {
     if (!invoerNaam.trim() || !gekozenGeslacht) return;

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useVoortgangStore } from '@/stores/voortgang-store';
 import { useInstellingenStore } from '@/stores/instellingen-store';
+import { useProfielStore } from '@/stores/profiel-store';
 import TerugKnop from '@/components/navigatie/TerugKnop';
 import lettersData from '@/data/letters.json';
 import cijfersData from '@/data/cijfers.json';
@@ -23,6 +24,7 @@ export default function OuderDashboard() {
 
   const { pincode, audioAan, sessieLimiet, updateInstellingen, evaluatie } = useInstellingenStore();
   const { items, aantalSterren, resetItem, resetAlles } = useVoortgangStore();
+  const { naam, geslacht, profielIngesteld, reset: resetProfiel } = useProfielStore();
 
   const handlePinInvoer = (cijfer: string) => {
     const nieuwePinInvoer = pinInvoer + cijfer;
@@ -203,19 +205,62 @@ export default function OuderDashboard() {
           </div>
         </section>
 
+        {/* Profiel */}
+        <section className="bg-white rounded-kind p-6 shadow-md">
+          <h3 className="text-lg font-bold mb-4">Profiel</h3>
+          {profielIngesteld ? (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span>Naam</span>
+                <span className="font-semibold">{naam}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Geslacht</span>
+                <span className="font-semibold">{geslacht === 'jongen' ? '👦' : '👧'}</span>
+              </div>
+              <button
+                onClick={() => router.push('/profiel')}
+                className="px-4 py-2 bg-blue-100 text-blue-600 rounded-lg font-semibold hover:bg-blue-200 transition-colors"
+              >
+                Profiel wijzigen
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => router.push('/profiel')}
+              className="px-4 py-2 bg-green-100 text-green-600 rounded-lg font-semibold hover:bg-green-200 transition-colors"
+            >
+              Profiel instellen
+            </button>
+          )}
+        </section>
+
         {/* Reset */}
         <section className="bg-white rounded-kind p-6 shadow-md">
           <h3 className="text-lg font-bold mb-4">Reset</h3>
-          <button
-            onClick={() => {
-              if (confirm('Weet je zeker dat je alle voortgang wilt resetten?')) {
-                resetAlles();
-              }
-            }}
-            className="px-4 py-2 bg-red-100 text-red-600 rounded-lg font-semibold hover:bg-red-200 transition-colors"
-          >
-            Alle voortgang resetten
-          </button>
+          <div className="space-y-3">
+            <button
+              onClick={() => {
+                if (confirm('Weet je zeker dat je alle voortgang wilt resetten?')) {
+                  resetAlles();
+                }
+              }}
+              className="px-4 py-2 bg-red-100 text-red-600 rounded-lg font-semibold hover:bg-red-200 transition-colors"
+            >
+              Alle voortgang resetten
+            </button>
+            <button
+              onClick={() => {
+                if (confirm('Profiel en voortgang resetten?')) {
+                  resetAlles();
+                  resetProfiel();
+                }
+              }}
+              className="px-4 py-2 bg-red-100 text-red-600 rounded-lg font-semibold hover:bg-red-200 transition-colors ml-2"
+            >
+              Alles resetten (incl. profiel)
+            </button>
+          </div>
         </section>
       </div>
     </div>
