@@ -108,11 +108,12 @@ export function evalueerSimilarity(
     genormaliseerdeTemplate
   );
 
-  // Gewogen totaalscore
+  // Gewogen totaalscore — overlap is het belangrijkst, richting het minst
+  // (kinderen tekenen streken in willekeurige volgorde/richting)
   const score =
     proportieScore * 0.3 +
-    richtingScore * 0.3 +
-    overlapScore * 0.4;
+    richtingScore * 0.15 +
+    overlapScore * 0.55;
 
   const geslaagd = score >= drempel;
   const feedback: FeedbackType = geslaagd ? 'succes' : 'aanmoediging';

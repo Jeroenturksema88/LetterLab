@@ -48,16 +48,27 @@ export function useAudioSpeler(audioAan: boolean = true) {
 
   const spreek = useCallback(
     (tekst: string): Promise<void> => {
-      if (!audioAan || !synthRef.current) return Promise.resolve();
+      if (!audioAan) return Promise.resolve();
+      if (typeof window === 'undefined' || !window.speechSynthesis) return Promise.resolve();
+
+      const synth = window.speechSynthesis;
 
       return new Promise((resolve) => {
-        const synth = synthRef.current!;
-
         // iOS Safari fix: cancel eventuele hangende spraak eerst
         synth.cancel();
 
         // Korte vertraging na cancel zodat iOS Safari de state reset
         setTimeout(() => {
+          // Herlaad stemmen (iOS Safari laadt ze soms laat)
+          if (!stemRef.current) {
+            const stemmen = synth.getVoices();
+            const nlStem =
+              stemmen.find((s) => s.lang === 'nl-NL' && s.localService) ||
+              stemmen.find((s) => s.lang === 'nl-NL') ||
+              stemmen.find((s) => s.lang.startsWith('nl'));
+            if (nlStem) stemRef.current = nlStem;
+          }
+
           const uiting = new SpeechSynthesisUtterance(tekst);
           uiting.lang = 'nl-NL';
           uiting.rate = 0.85;
@@ -68,11 +79,7 @@ export function useAudioSpeler(audioAan: boolean = true) {
             uiting.voice = stemRef.current;
           }
 
-          uiting.onend = () => resolve();
-          uiting.onerror = () => resolve();
-
-          // iOS Safari bug: speechSynthesis kan pauzeren na 15 sec
-          // Workaround: hervat elke 10 seconden
+          // iOS Safari bug: speechSynthesis pauzeert soms na ~15 sec
           const hervatTimer = setInterval(() => {
             if (synth.speaking && synth.paused) {
               synth.resume();
@@ -80,7 +87,7 @@ export function useAudioSpeler(audioAan: boolean = true) {
             if (!synth.speaking) {
               clearInterval(hervatTimer);
             }
-          }, 10000);
+          }, 5000);
 
           uiting.onend = () => {
             clearInterval(hervatTimer);
@@ -91,8 +98,14 @@ export function useAudioSpeler(audioAan: boolean = true) {
             resolve();
           };
 
+          // Timeout fallback: als spraak na 10 sec niet klaar is, resolve toch
+          setTimeout(() => {
+            clearInterval(hervatTimer);
+            resolve();
+          }, 10000);
+
           synth.speak(uiting);
-        }, 50);
+        }, 100);
       });
     },
     [audioAan]

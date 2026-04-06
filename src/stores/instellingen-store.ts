@@ -12,10 +12,10 @@ const standaardInstellingen: Instellingen = {
   sessieLimiet: 15,
   pincode: '1234',
   evaluatie: {
-    overtrekDrempel: 0.70,
-    naschrijfDrempel: 0.50,
-    freehandDrempel: 0.40,
-    proximityMarge: 35,
+    overtrekDrempel: 0.55,
+    naschrijfDrempel: 0.25,
+    freehandDrempel: 0.20,
+    proximityMarge: 45,
     inactiviteitTimeout: 4000,
   },
 };

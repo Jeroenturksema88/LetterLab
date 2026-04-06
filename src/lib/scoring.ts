@@ -181,7 +181,7 @@ export function tekenLijnOpGrid(
  * Rasteriseer een set streken naar een grid van de opgegeven grootte.
  * Elke streek wordt als lijnstukken op het raster getekend.
  */
-function rasteriseerStreken(streken: Punt[][], grootte: number): boolean[][] {
+function rasteriseerStreken(streken: Punt[][], grootte: number, dikte: number = 1): boolean[][] {
   // Maak een leeg grid
   const grid: boolean[][] = Array.from({ length: grootte }, () =>
     Array.from({ length: grootte }, () => false)
@@ -189,7 +189,7 @@ function rasteriseerStreken(streken: Punt[][], grootte: number): boolean[][] {
 
   for (const streek of streken) {
     for (let i = 0; i < streek.length - 1; i++) {
-      tekenLijnOpGrid(grid, streek[i], streek[i + 1], grootte);
+      tekenLijnOpGrid(grid, streek[i], streek[i + 1], grootte, dikte);
     }
 
     // Als een streek maar 1 punt heeft, markeer dat punt
@@ -216,9 +216,10 @@ export function vergelijkOverlap(
   template: Punt[][]
 ): number {
   const GRID_GROOTTE = 20;
+  const LIJN_DIKTE = 2; // Dikkere lijnen voor meer vergevingsgezinde overlap
 
-  const gridGebruiker = rasteriseerStreken(gebruiker, GRID_GROOTTE);
-  const gridTemplate = rasteriseerStreken(template, GRID_GROOTTE);
+  const gridGebruiker = rasteriseerStreken(gebruiker, GRID_GROOTTE, LIJN_DIKTE);
+  const gridTemplate = rasteriseerStreken(template, GRID_GROOTTE, LIJN_DIKTE);
 
   let doorsnede = 0; // Intersection: beide gevuld
   let vereniging = 0; // Union: minstens één gevuld

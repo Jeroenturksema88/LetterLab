@@ -250,9 +250,7 @@ export default function OefeningView({
         setBeloningType(niveau === 'zelfstandig' ? 'confetti' : 'ster');
         setToonBeloning(true);
         audioSpeelFn?.('succes');
-        setTimeout(() => {
-          setFeedback('succes');
-        }, 2000);
+        // Feedback overlay pas NA de beloningsanimatie (3 sec)
       } else {
         audioSpeelFn?.('aanmoediging');
         setFeedback('aanmoediging');
@@ -424,11 +422,14 @@ export default function OefeningView({
             disabled={disabled}
           />
 
-          {/* Beloningsanimatie */}
+          {/* Beloningsanimatie — feedback overlay pas NA animatie */}
           <BeloningAnimatie
             type={beloningType}
             zichtbaar={toonBeloning}
-            onKlaar={() => setToonBeloning(false)}
+            onKlaar={() => {
+              setToonBeloning(false);
+              setFeedback('succes');
+            }}
           />
         </div>
       </div>
@@ -489,17 +490,19 @@ export default function OefeningView({
         </div>
       </div>
 
-      {/* Klaar-knop: groot groen rondje met witte vink */}
-      {!disabled && streken.length > 0 && (
-        <div className="flex justify-center pb-4">
+      {/* Klaar-knop: altijd zichtbaar, maar dimmed als er geen streken zijn */}
+      {!disabled && (
+        <div className="flex justify-center pb-3">
           <motion.button
             onClick={handleKlaarKnop}
-            className="rounded-full shadow-lg flex items-center justify-center bg-green-500"
-            style={{ width: 64, height: 64 }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            className="rounded-full shadow-lg flex items-center justify-center"
+            style={{
+              width: 56,
+              height: 56,
+              backgroundColor: streken.length > 0 ? '#22C55E' : '#D1D5DB',
+            }}
+            whileTap={streken.length > 0 ? { scale: 0.9 } : {}}
+            disabled={streken.length === 0}
             aria-label="Klaar"
           >
             <VinkIcoon />

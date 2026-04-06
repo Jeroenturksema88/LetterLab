@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import CategorieKnop from '@/components/navigatie/CategorieKnop';
+import { useProfielStore } from '@/stores/profiel-store';
 import type { Categorie } from '@/types';
 
 // Letters van de titel met individuele kleuren en kleine rotaties
