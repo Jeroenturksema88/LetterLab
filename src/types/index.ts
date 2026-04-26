@@ -9,6 +9,11 @@ export type DominanteHand = 'links' | 'rechts';
 // Avatar-keuze in plaats van geslacht. Vier vriendelijke dieren — gender-neutraal,
 // inclusief, en een 3,5-jarige snapt eerder "kies een dier" dan "kies je geslacht".
 export type Avatar = 'kat' | 'hond' | 'aap' | 'vlinder';
+// Letter-stijl keuze. 'blok' = klassieke hoekige hoofdletters (default,
+// goed voor 3-5j herkenning). 'schoolschrift' = aanleerletters met
+// afgeronde curves en lichte terminals — sluit aan bij methode "Pennenstreken"
+// en "Schrijfsleutel" zoals gebruikt in NL groep 1-3 (4-7j).
+export type LetterStijl = 'blok' | 'schoolschrift';
 export type AudioType =
   | 'intro'
   | 'niveau1_instructie'
@@ -87,6 +92,10 @@ export interface Instellingen {
   sessieLimiet: number;
   pincode: string;
   dominanteHand: DominanteHand;
+  // Welke letter-vormgeving het kind ziet. Default 'blok' (klassieke
+  // hoofdletters); 'schoolschrift' = aanleerletters met curves zoals in NL
+  // groep 1-3 leerlingen leren schrijven.
+  letterStijl: LetterStijl;
   evaluatie: EvaluatieInstellingen;
   // Wanneer de huidige sessie begon (epoch ms). Wordt gebruikt om de
   // sessieLimiet te enforce'n. Null = nog geen sessie gestart of net gereset.

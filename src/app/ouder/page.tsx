@@ -25,7 +25,7 @@ export default function OuderDashboard() {
   const [ontgrendeld, setOntgrendeld] = useState(false);
   const [pinFout, setPinFout] = useState(false);
 
-  const { pincode, audioAan, sessieLimiet, updateInstellingen, evaluatie, dominanteHand } = useInstellingenStore();
+  const { pincode, audioAan, sessieLimiet, updateInstellingen, evaluatie, dominanteHand, letterStijl } = useInstellingenStore();
   const { items, aantalSterren, resetAlles } = useVoortgangStore();
   const { naam, avatar, profielIngesteld, reset: resetProfiel } = useProfielStore();
 
@@ -133,7 +133,7 @@ export default function OuderDashboard() {
           <div className="space-y-3">
             {(['letters', 'cijfers', 'vormen'] as Categorie[]).map((cat) => {
               const data = voortgangData[cat];
-              const config = haalCategorieConfig(cat);
+              const config = haalCategorieConfig(cat, letterStijl);
               const isOpen = uitgeklapt === cat;
               const naamLabel = cat.charAt(0).toUpperCase() + cat.slice(1);
               return (
@@ -286,6 +286,27 @@ export default function OuderDashboard() {
                     }`}
                   >
                     {hand === 'links' ? '🤚 Links' : 'Rechts ✋'}
+                  </button>
+                ))}
+              </div>
+            </InstellingRij>
+
+            <InstellingRij
+              label="Letter-stijl"
+              tooltip="Blok = klassieke hoekige hoofdletters (goed voor 3-5j herkenning). Schoolschrift = aanleerletters met afgeronde curves zoals NL groep 1-3 leren schrijven (sluit aan bij methode Pennenstreken/Schrijfsleutel)."
+            >
+              <div className="flex gap-2">
+                {(['blok', 'schoolschrift'] as const).map((stijl) => (
+                  <button
+                    key={stijl}
+                    onClick={() => updateInstellingen({ letterStijl: stijl })}
+                    className={`px-4 py-1.5 rounded-lg font-semibold text-sm transition-colors ${
+                      letterStijl === stijl
+                        ? 'bg-indigo-100 text-indigo-700 border-2 border-indigo-400'
+                        : 'bg-gray-50 text-gray-500 border-2 border-transparent'
+                    }`}
+                  >
+                    {stijl === 'blok' ? 'Blok' : 'Schoolschrift'}
                   </button>
                 ))}
               </div>

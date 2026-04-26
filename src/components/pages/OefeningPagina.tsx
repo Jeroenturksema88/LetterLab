@@ -23,7 +23,8 @@ interface OefeningPaginaProps {
 
 export default function OefeningPagina({ categorie, itemId }: OefeningPaginaProps) {
   const router = useRouter();
-  const config = haalCategorieConfig(categorie);
+  const letterStijl = useInstellingenStore((s) => s.letterStijl);
+  const config = haalCategorieConfig(categorie, letterStijl);
   const { markeerVoltooid, huidigNiveau, registreerPoging } = useVoortgangStore();
   // Subscribe expliciet op `items` zodat dit component re-rendert wanneer markeerVoltooid
   // de store wijzigt. Zonder deze subscription blijft `niveau` op de oude waarde

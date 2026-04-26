@@ -18,6 +18,9 @@ const standaardInstellingen: Instellingen = {
   pincode: '1234',
   // Default rechts; ouder kan switchen via profiel of dashboard.
   dominanteHand: 'rechts',
+  // Default 'blok' (klassieke hoofdletters). Ouder kan in dashboard switchen
+  // naar 'schoolschrift' voor aanleerletter-stijl met curves (zoals NL groep 1-3).
+  letterStijl: 'blok',
   // Sessie-tracking voor sessieLimiet enforcement. Null = nog niet gestart;
   // wordt op eerste interactie van de dag gezet via de SessieLimietBewaker.
   sessieStartTijd: null,
@@ -71,18 +74,17 @@ export const useInstellingenStore = create<InstellingenState>()(
     }),
     {
       name: 'letterlab-instellingen',
-      // v4: sessieStartTijd + dashboardTourGezien toegevoegd voor sessie-
-      // enforcement en ouder-onboarding. Bestaande gebruikers krijgen ze
-      // op default-waardes via merge in de partial-state.
-      version: 4,
-      // Migratie: oude state heeft de twee nieuwe velden niet — vul ze in.
+      // v5: letterStijl toegevoegd. v4: sessieStartTijd + dashboardTourGezien.
+      // Bestaande gebruikers krijgen alle nieuwe velden op default via migratie.
+      version: 5,
       migrate: (persistedState: unknown, fromVersion) => {
-        if (fromVersion < 4 && persistedState && typeof persistedState === 'object') {
+        if (fromVersion < 5 && persistedState && typeof persistedState === 'object') {
           const state = persistedState as Record<string, unknown>;
           return {
             ...state,
             sessieStartTijd: state.sessieStartTijd ?? null,
             dashboardTourGezien: state.dashboardTourGezien ?? false,
+            letterStijl: state.letterStijl ?? 'blok',
           };
         }
         return persistedState;

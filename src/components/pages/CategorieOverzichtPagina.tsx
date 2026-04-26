@@ -19,7 +19,8 @@ interface CategorieOverzichtPaginaProps {
 
 export default function CategorieOverzichtPagina({ categorie }: CategorieOverzichtPaginaProps) {
   const router = useRouter();
-  const config = haalCategorieConfig(categorie);
+  const letterStijl = useInstellingenStore((s) => s.letterStijl);
+  const config = haalCategorieConfig(categorie, letterStijl);
   const { items: voortgangItems, aantalSterren } = useVoortgangStore();
   const audioAan = useInstellingenStore((s) => s.audioAan);
   const { spreek } = useAudioSpeler(audioAan);
