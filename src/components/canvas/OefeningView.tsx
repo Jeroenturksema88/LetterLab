@@ -19,6 +19,10 @@ interface OefeningViewProps {
   onVoltooid: (geslaagd: boolean) => void;
   onTerug: () => void;
   audioSpeelFn?: (type: string) => void;
+  // Replay-modus voor items waar alle 3 niveaus al voltooid zijn: tekenfeest
+  // zonder evaluatie. Persona "Bram" — bij her-tap geen verwarrende loop door
+  // 3 niveaus, gewoon vrij tekenen met het voorbeeld erbij als referentie.
+  replayModus?: boolean;
 }
 
 // --- SVG Iconen (geen emoji) ---
@@ -90,7 +94,10 @@ export default function OefeningView({
   onVoltooid,
   onTerug,
   audioSpeelFn,
+  replayModus = false,
 }: OefeningViewProps) {
+  // Onderdruk lint-warning over onVoltooid in replay-modus
+  void onVoltooid;
   const [streken, setStreken] = useState<TekenPunt[][]>([]);
   const [feedback, setFeedback] = useState<FeedbackType | null>(null);
   const [toonBeloning, setToonBeloning] = useState(false);
@@ -240,13 +247,17 @@ export default function OefeningView({
       const nieuweStreken = [...streken, punten];
       setStreken(nieuweStreken);
 
+      // In replay-modus is er geen evaluatie — kind tekent vrij met het
+      // voorbeeld als referentie ernaast.
+      if (replayModus) return;
+
       // Reset inactiviteitstimer
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => {
         evalueer(nieuweStreken);
       }, evaluatieInstellingen.inactiviteitTimeout);
     },
-    [streken, evaluatieInstellingen.inactiviteitTimeout]
+    [streken, evaluatieInstellingen.inactiviteitTimeout, replayModus]
   );
 
   const evalueer = useCallback(
@@ -455,35 +466,49 @@ export default function OefeningView({
           className="relative bg-white rounded-kind shadow-lg overflow-hidden flex-shrink-0"
           style={{ width: canvasBreedte, height: canvasHoogte }}
         >
-          {/* Template-laag */}
-          {niveau === 'overtrekken' && (
-            <>
-              <TemplateCanvas
-                item={item}
-                niveau="overtrekken"
-                breedte={canvasBreedte}
-                hoogte={canvasHoogte}
-              />
-              {/* Startpunt-animatie: alleen tonen als er nog niet getekend is */}
-              {item.streken.length > 0 && streken.length === 0 && (
-                <StrokePad
-                  startPunt={item.streken[0].startPunt}
-                  kleur={item.kleur}
-                  schaal={schaal}
-                  offsetX={offsetX}
-                  offsetY={offsetY}
-                />
-              )}
-            </>
-          )}
-
-          {niveau === 'zelfstandig' && (
+          {/* Template-laag.
+              In replay-modus tonen we het volledige voorbeeld in kleur (zoals
+              naschrijven-template) zodat het kind kan vrij-tekenen met het
+              voorbeeld als referentie — geen evaluatie, geen klaar-knop. */}
+          {replayModus ? (
             <TemplateCanvas
               item={item}
-              niveau="zelfstandig"
+              niveau="naschrijven"
               breedte={canvasBreedte}
               hoogte={canvasHoogte}
             />
+          ) : (
+            <>
+              {niveau === 'overtrekken' && (
+                <>
+                  <TemplateCanvas
+                    item={item}
+                    niveau="overtrekken"
+                    breedte={canvasBreedte}
+                    hoogte={canvasHoogte}
+                  />
+                  {/* Startpunt-animatie: alleen tonen als er nog niet getekend is */}
+                  {item.streken.length > 0 && streken.length === 0 && (
+                    <StrokePad
+                      startPunt={item.streken[0].startPunt}
+                      kleur={item.kleur}
+                      schaal={schaal}
+                      offsetX={offsetX}
+                      offsetY={offsetY}
+                    />
+                  )}
+                </>
+              )}
+
+              {niveau === 'zelfstandig' && (
+                <TemplateCanvas
+                  item={item}
+                  niveau="zelfstandig"
+                  breedte={canvasBreedte}
+                  hoogte={canvasHoogte}
+                />
+              )}
+            </>
           )}
 
           {/* Interactieve tekenlaag.
@@ -599,8 +624,9 @@ export default function OefeningView({
 
       {/* Klaar-knop: altijd zichtbaar. Pulseert zachtjes zodra het kind iets
           getekend heeft — visuele uitnodiging om te tikken als ze klaar zijn.
-          Dit verkleint de behoefte om op de inactiviteit-timer te leunen. */}
-      {!disabled && (
+          Dit verkleint de behoefte om op de inactiviteit-timer te leunen.
+          In replay-modus tonen we hem niet (geen evaluatie nodig). */}
+      {!replayModus && !disabled && (
         <div className="flex justify-center pb-3">
           <motion.button
             onClick={handleKlaarKnop}
@@ -631,12 +657,14 @@ export default function OefeningView({
         </div>
       )}
 
-      {/* Feedback overlay (succes / aanmoediging) */}
-      <FeedbackOverlay
-        type={feedback}
-        onVolgende={handleVolgende}
-        onNogEenKeer={handleNogEenKeer}
-      />
+      {/* Feedback overlay (succes / aanmoediging) — niet in replay-modus */}
+      {!replayModus && (
+        <FeedbackOverlay
+          type={feedback}
+          onVolgende={handleVolgende}
+          onNogEenKeer={handleNogEenKeer}
+        />
+      )}
     </div>
   );
 }

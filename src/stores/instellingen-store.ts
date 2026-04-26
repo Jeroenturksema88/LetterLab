@@ -18,6 +18,11 @@ const standaardInstellingen: Instellingen = {
   pincode: '1234',
   // Default rechts; ouder kan switchen via profiel of dashboard.
   dominanteHand: 'rechts',
+  // Sessie-tracking voor sessieLimiet enforcement. Null = nog niet gestart;
+  // wordt op eerste interactie van de dag gezet via de SessieLimietBewaker.
+  sessieStartTijd: null,
+  // Eerste-keer ouder-onboarding nog niet gezien.
+  dashboardTourGezien: false,
   evaluatie: {
     // Overtrekken: 60% van het pad moet bedekt zijn — pittig genoeg dat er echt
     // langs het pad getekend wordt, soepel genoeg dat een 3,5-jarige slaagt.
@@ -66,10 +71,22 @@ export const useInstellingenStore = create<InstellingenState>()(
     }),
     {
       name: 'letterlab-instellingen',
-      // v3: dominanteHand toegevoegd, inactiviteit-timeout verhoogd naar 10s,
-      // evaluatie-algoritme uitgebreid met segment-check + Chamfer. Bestaande
-      // gebruikers krijgen zo automatisch de nieuwe defaults.
-      version: 3,
+      // v4: sessieStartTijd + dashboardTourGezien toegevoegd voor sessie-
+      // enforcement en ouder-onboarding. Bestaande gebruikers krijgen ze
+      // op default-waardes via merge in de partial-state.
+      version: 4,
+      // Migratie: oude state heeft de twee nieuwe velden niet — vul ze in.
+      migrate: (persistedState: unknown, fromVersion) => {
+        if (fromVersion < 4 && persistedState && typeof persistedState === 'object') {
+          const state = persistedState as Record<string, unknown>;
+          return {
+            ...state,
+            sessieStartTijd: state.sessieStartTijd ?? null,
+            dashboardTourGezien: state.dashboardTourGezien ?? false,
+          };
+        }
+        return persistedState;
+      },
     }
   )
 );

@@ -1,16 +1,19 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useVoortgangStore } from '@/stores/voortgang-store';
 import { useInstellingenStore } from '@/stores/instellingen-store';
 import { useProfielStore } from '@/stores/profiel-store';
 import TerugKnop from '@/components/navigatie/TerugKnop';
+import OuderTour from '@/components/ouder/OuderTour';
+import { AvatarSilhouet, AVATAR_KLEUREN } from '@/components/avatars/AvatarSilhouet';
+import { haalCategorieConfig } from '@/lib/categorie-registry';
 import lettersData from '@/data/letters.json';
 import cijfersData from '@/data/cijfers.json';
 import vormenData from '@/data/vormen.json';
-import type { ItemDef } from '@/types';
+import type { Categorie, ItemDef } from '@/types';
 
 const letters = lettersData as ItemDef[];
 const cijfers = cijfersData as ItemDef[];
@@ -23,38 +26,28 @@ export default function OuderDashboard() {
   const [pinFout, setPinFout] = useState(false);
 
   const { pincode, audioAan, sessieLimiet, updateInstellingen, evaluatie, dominanteHand } = useInstellingenStore();
-  const { items, aantalSterren, resetItem, resetAlles } = useVoortgangStore();
-  const { naam, geslacht, profielIngesteld, reset: resetProfiel } = useProfielStore();
+  const { items, aantalSterren, resetAlles } = useVoortgangStore();
+  const { naam, avatar, profielIngesteld, reset: resetProfiel } = useProfielStore();
 
-  // Pincode-wijzigen state. Gebruikt drie 4-cijfer invoervelden: huidig,
-  // nieuw, bevestigen. Validatie loopt via de wijzig-handler.
+  // Pincode-wijzigen state
   const [pwHuidig, setPwHuidig] = useState('');
   const [pwNieuw, setPwNieuw] = useState('');
   const [pwBevestig, setPwBevestig] = useState('');
   const [pwFout, setPwFout] = useState<null | 'huidig' | 'mismatch' | 'kort'>(null);
   const [pwSucces, setPwSucces] = useState(false);
 
+  // Welke categorie is uitgeklapt voor drill-down? Eén tegelijk om scroll te beperken.
+  const [uitgeklapt, setUitgeklapt] = useState<Categorie | null>(null);
+
   const wijzigPincode = () => {
     setPwSucces(false);
-    if (pwHuidig !== pincode) {
-      setPwFout('huidig');
-      return;
-    }
-    if (pwNieuw.length !== 4) {
-      setPwFout('kort');
-      return;
-    }
-    if (pwNieuw !== pwBevestig) {
-      setPwFout('mismatch');
-      return;
-    }
+    if (pwHuidig !== pincode) { setPwFout('huidig'); return; }
+    if (pwNieuw.length !== 4) { setPwFout('kort'); return; }
+    if (pwNieuw !== pwBevestig) { setPwFout('mismatch'); return; }
     updateInstellingen({ pincode: pwNieuw });
-    setPwHuidig('');
-    setPwNieuw('');
-    setPwBevestig('');
+    setPwHuidig(''); setPwNieuw(''); setPwBevestig('');
     setPwFout(null);
     setPwSucces(true);
-    // Verberg succes-melding na 3 seconden
     setTimeout(() => setPwSucces(false), 3000);
   };
 
@@ -79,20 +72,11 @@ export default function OuderDashboard() {
     }
   };
 
-  const voortgangOverzicht = useMemo(() => {
-    const berekenCat = (catItems: ItemDef[]) => {
-      let voltooid = 0;
-      catItems.forEach((item) => {
-        if (aantalSterren(item.id) === 3) voltooid++;
-      });
-      return { voltooid, totaal: catItems.length };
-    };
-    return {
-      letters: berekenCat(letters),
-      cijfers: berekenCat(cijfers),
-      vormen: berekenCat(vormen),
-    };
-  }, [items, aantalSterren]);
+  const voortgangData = useMemo(() => ({
+    letters: { items: letters, voltooid: letters.filter((l) => aantalSterren(l.id) === 3).length },
+    cijfers: { items: cijfers, voltooid: cijfers.filter((c) => aantalSterren(c.id) === 3).length },
+    vormen: { items: vormen, voltooid: vormen.filter((v) => aantalSterren(v.id) === 3).length },
+  }), [items, aantalSterren]);
 
   if (!ontgrendeld) {
     return (
@@ -107,9 +91,7 @@ export default function OuderDashboard() {
               key={i}
               className={`w-4 h-4 rounded-full ${
                 i < pinInvoer.length
-                  ? pinFout
-                    ? 'bg-red-400'
-                    : 'bg-letter-kleur'
+                  ? pinFout ? 'bg-red-400' : 'bg-letter-kleur'
                   : 'bg-gray-200'
               } transition-colors`}
             />
@@ -121,11 +103,8 @@ export default function OuderDashboard() {
             <button
               key={cijfer}
               onClick={() => {
-                if (cijfer === '←') {
-                  setPinInvoer((prev) => prev.slice(0, -1));
-                } else if (cijfer) {
-                  handlePinInvoer(cijfer);
-                }
+                if (cijfer === '←') setPinInvoer((prev) => prev.slice(0, -1));
+                else if (cijfer) handlePinInvoer(cijfer);
               }}
               className={`w-16 h-16 rounded-2xl text-2xl font-bold flex items-center justify-center ${
                 cijfer ? 'bg-white shadow-md active:bg-gray-100' : ''
@@ -148,42 +127,120 @@ export default function OuderDashboard() {
       </div>
 
       <div className="p-6 space-y-6 max-w-2xl mx-auto w-full">
-        {/* Voortgang */}
+        {/* Voortgang met drill-down per categorie */}
         <section className="bg-white rounded-kind p-6 shadow-md">
           <h3 className="text-lg font-bold mb-4">Voortgang</h3>
           <div className="space-y-3">
-            {[
-              { naam: 'Letters', data: voortgangOverzicht.letters, kleur: 'bg-letter-kleur' },
-              { naam: 'Cijfers', data: voortgangOverzicht.cijfers, kleur: 'bg-cijfer-kleur' },
-              { naam: 'Vormen', data: voortgangOverzicht.vormen, kleur: 'bg-vorm-kleur' },
-            ].map(({ naam, data, kleur }) => (
-              <div key={naam}>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="font-semibold">{naam}</span>
-                  <span className="text-gray-500">{data.voltooid}/{data.totaal}</span>
+            {(['letters', 'cijfers', 'vormen'] as Categorie[]).map((cat) => {
+              const data = voortgangData[cat];
+              const config = haalCategorieConfig(cat);
+              const isOpen = uitgeklapt === cat;
+              const naamLabel = cat.charAt(0).toUpperCase() + cat.slice(1);
+              return (
+                <div key={cat}>
+                  <button
+                    onClick={() => setUitgeklapt(isOpen ? null : cat)}
+                    className="w-full text-left"
+                    aria-expanded={isOpen}
+                  >
+                    <div className="flex justify-between items-center text-sm mb-1.5">
+                      <div className="flex items-center gap-2">
+                        <motion.div
+                          animate={{ rotate: isOpen ? 90 : 0 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.5" strokeLinecap="round">
+                            <polyline points="9 18 15 12 9 6" />
+                          </svg>
+                        </motion.div>
+                        <span className="font-semibold">{naamLabel}</span>
+                      </div>
+                      <span className="text-gray-500">{data.voltooid}/{data.items.length}</span>
+                    </div>
+                    <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${(data.voltooid / data.items.length) * 100}%`,
+                          backgroundColor: config.hoofdkleur,
+                        }}
+                      />
+                    </div>
+                  </button>
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="pt-3 pb-1 grid grid-cols-7 sm:grid-cols-8 gap-1.5">
+                          {data.items.map((item) => {
+                            const sterren = aantalSterren(item.id);
+                            return (
+                              <button
+                                key={item.id}
+                                onClick={() => router.push(`${config.routePrefix}/${item.id}`)}
+                                className="aspect-square rounded-lg flex flex-col items-center justify-center p-1 transition-colors"
+                                style={{
+                                  backgroundColor: sterren === 3 ? `${config.hoofdkleur}20` : '#F3F4F6',
+                                  border: sterren === 3 ? `1.5px solid ${config.hoofdkleur}` : '1.5px solid transparent',
+                                }}
+                                aria-label={`${item.label} — ${sterren} van 3 sterren`}
+                              >
+                                <svg
+                                  viewBox={`${item.boundingBox.x} ${item.boundingBox.y} ${item.boundingBox.breedte} ${item.boundingBox.hoogte}`}
+                                  className="w-6 h-6"
+                                >
+                                  {item.paden.map((pad, i) => (
+                                    <path
+                                      key={i}
+                                      d={pad}
+                                      stroke={config.hoofdkleur}
+                                      strokeWidth="10"
+                                      fill="none"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                  ))}
+                                </svg>
+                                <div className="flex gap-0.5 mt-0.5">
+                                  {[0, 1, 2].map((i) => (
+                                    <div
+                                      key={i}
+                                      className="w-1 h-1 rounded-full"
+                                      style={{
+                                        backgroundColor: i < sterren ? '#EAB308' : '#D1D5DB',
+                                      }}
+                                    />
+                                  ))}
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-                <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full ${kleur} rounded-full transition-all duration-500`}
-                    style={{ width: `${(data.voltooid / data.totaal) * 100}%` }}
-                  />
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 
-        {/* Instellingen */}
+        {/* Instellingen met tooltips */}
         <section className="bg-white rounded-kind p-6 shadow-md">
           <h3 className="text-lg font-bold mb-4">Instellingen</h3>
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span>Audio</span>
+            <InstellingRij
+              label="Audio"
+              tooltip="Schakelt alle gesproken instructies en feedback aan of uit."
+            >
               <button
                 onClick={() => updateInstellingen({ audioAan: !audioAan })}
-                className={`w-14 h-8 rounded-full transition-colors ${
-                  audioAan ? 'bg-succes' : 'bg-gray-300'
-                }`}
+                className={`w-14 h-8 rounded-full transition-colors ${audioAan ? 'bg-succes' : 'bg-gray-300'}`}
               >
                 <div
                   className={`w-6 h-6 bg-white rounded-full shadow transition-transform ${
@@ -191,10 +248,12 @@ export default function OuderDashboard() {
                   }`}
                 />
               </button>
-            </div>
+            </InstellingRij>
 
-            <div className="flex items-center justify-between">
-              <span>Sessielimiet (min)</span>
+            <InstellingRij
+              label="Sessielimiet (min)"
+              tooltip="Na deze tijd verschijnt een 'klaar voor vandaag' scherm. Doorgaan kan alleen via de pincode. Kies 'onbeperkt' om uit te schakelen."
+            >
               <select
                 value={sessieLimiet}
                 onChange={(e) => updateInstellingen({ sessieLimiet: Number(e.target.value) })}
@@ -207,10 +266,12 @@ export default function OuderDashboard() {
                 <option value={20}>20</option>
                 <option value={30}>30</option>
               </select>
-            </div>
+            </InstellingRij>
 
-            <div className="flex items-center justify-between">
-              <span>Schrijfhand</span>
+            <InstellingRij
+              label="Schrijfhand"
+              tooltip="Voor linkshandige kinderen wisselt de naschrijven-layout: voorbeeld komt rechts, canvas links. Zo bedekt de tekenende hand het voorbeeld niet."
+            >
               <div className="flex gap-2">
                 {(['links', 'rechts'] as const).map((hand) => (
                   <button
@@ -228,10 +289,13 @@ export default function OuderDashboard() {
                   </button>
                 ))}
               </div>
-            </div>
+            </InstellingRij>
 
             <div>
-              <span className="block mb-2">Evaluatie-drempels</span>
+              <div className="flex items-center gap-1.5 mb-2">
+                <span>Evaluatie-drempels</span>
+                <TooltipKnop tekst="Hoe streng de app de tekening beoordeelt. Lager = makkelijker geslaagd. Bij herhaald falen wordt de drempel automatisch tijdelijk verlaagd." />
+              </div>
               <div className="space-y-2 text-sm">
                 {[
                   { label: 'Overtrekken', key: 'overtrekDrempel' as const, waarde: evaluatie.overtrekDrempel },
@@ -259,8 +323,10 @@ export default function OuderDashboard() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <span>Wachttijd voor auto-evaluatie</span>
+            <InstellingRij
+              label="Wachttijd auto-evaluatie"
+              tooltip="Hoe lang de app wacht na de laatste streek voordat hij automatisch beoordeelt. 10 seconden is ruim voor een 3,5-jarige die even nadenkt."
+            >
               <div className="flex items-center gap-2">
                 <input
                   type="range"
@@ -279,28 +345,42 @@ export default function OuderDashboard() {
                   {Math.round(evaluatie.inactiviteitTimeout / 1000)}s
                 </span>
               </div>
-            </div>
+            </InstellingRij>
           </div>
         </section>
 
-        {/* Profiel */}
+        {/* Profiel — toon avatar i.p.v. geslacht */}
         <section className="bg-white rounded-kind p-6 shadow-md">
           <h3 className="text-lg font-bold mb-4">Profiel</h3>
           {profielIngesteld ? (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span>Naam</span>
-                <span className="font-semibold">{naam}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span>Geslacht</span>
-                <span className="font-semibold">{geslacht === 'jongen' ? '👦' : '👧'}</span>
+            <div className="flex items-center gap-4">
+              {avatar && (
+                <div
+                  className="rounded-2xl flex items-center justify-center flex-shrink-0"
+                  style={{
+                    width: 64,
+                    height: 64,
+                    background: AVATAR_KLEUREN[avatar].achtergrond,
+                  }}
+                >
+                  <AvatarSilhouet
+                    avatar={avatar}
+                    hoofdkleur={AVATAR_KLEUREN[avatar].hoofd}
+                    accentDonker={AVATAR_KLEUREN[avatar].donker}
+                    accentLicht={AVATAR_KLEUREN[avatar].licht}
+                    grootte={48}
+                  />
+                </div>
+              )}
+              <div className="flex-1">
+                <div className="text-sm text-gray-500">Naam</div>
+                <div className="font-semibold text-lg">{naam}</div>
               </div>
               <button
                 onClick={() => router.push('/profiel')}
                 className="px-4 py-2 bg-blue-100 text-blue-600 rounded-lg font-semibold hover:bg-blue-200 transition-colors"
               >
-                Profiel wijzigen
+                Wijzigen
               </button>
             </div>
           ) : (
@@ -313,38 +393,29 @@ export default function OuderDashboard() {
           )}
         </section>
 
-        {/* Pincode wijzigen — toegankelijk wanneer ouder is ingelogd */}
+        {/* Pincode wijzigen */}
         <section className="bg-white rounded-kind p-6 shadow-md">
-          <h3 className="text-lg font-bold mb-4">Pincode wijzigen</h3>
+          <div className="flex items-center gap-1.5 mb-4">
+            <h3 className="text-lg font-bold">Pincode wijzigen</h3>
+            <TooltipKnop tekst="De pincode beveiligt dit dashboard zodat je kind het niet zelf kan openen. Standaard is 1234 — verander hem!" />
+          </div>
           <div className="space-y-4">
             <PincodeVeld
               label="Huidige pincode"
               waarde={pwHuidig}
-              setWaarde={(v) => {
-                setPwHuidig(v);
-                setPwFout(null);
-                setPwSucces(false);
-              }}
+              setWaarde={(v) => { setPwHuidig(v); setPwFout(null); setPwSucces(false); }}
               foutief={pwFout === 'huidig'}
             />
             <PincodeVeld
               label="Nieuwe pincode (4 cijfers)"
               waarde={pwNieuw}
-              setWaarde={(v) => {
-                setPwNieuw(v);
-                setPwFout(null);
-                setPwSucces(false);
-              }}
+              setWaarde={(v) => { setPwNieuw(v); setPwFout(null); setPwSucces(false); }}
               foutief={pwFout === 'mismatch' || pwFout === 'kort'}
             />
             <PincodeVeld
               label="Bevestig nieuwe pincode"
               waarde={pwBevestig}
-              setWaarde={(v) => {
-                setPwBevestig(v);
-                setPwFout(null);
-                setPwSucces(false);
-              }}
+              setWaarde={(v) => { setPwBevestig(v); setPwFout(null); setPwSucces(false); }}
               foutief={pwFout === 'mismatch'}
             />
 
@@ -355,11 +426,7 @@ export default function OuderDashboard() {
                 {pwFout === 'mismatch' && 'Nieuwe pincodes komen niet overeen'}
               </div>
             )}
-            {pwSucces && (
-              <div className="text-sm text-green-600 font-medium">
-                ✓ Pincode is gewijzigd
-              </div>
-            )}
+            {pwSucces && <div className="text-sm text-green-600 font-medium">✓ Pincode is gewijzigd</div>}
 
             <button
               onClick={wijzigPincode}
@@ -381,9 +448,7 @@ export default function OuderDashboard() {
           <div className="space-y-3">
             <button
               onClick={() => {
-                if (confirm('Weet je zeker dat je alle voortgang wilt resetten?')) {
-                  resetAlles();
-                }
+                if (confirm('Weet je zeker dat je alle voortgang wilt resetten?')) resetAlles();
               }}
               className="px-4 py-2 bg-red-100 text-red-600 rounded-lg font-semibold hover:bg-red-200 transition-colors"
             >
@@ -403,13 +468,76 @@ export default function OuderDashboard() {
           </div>
         </section>
       </div>
+
+      {/* Eerste-keer onboarding tour — toont zichzelf alleen wanneer
+          dashboardTourGezien false is in store. */}
+      <OuderTour />
     </div>
   );
 }
 
-// Compact 4-cijfer pincode-invoerveld met masked-display, only-digits-filter
-// en visuele fout-indicatie. autoComplete="new-password" voorkomt dat browsers
-// hier pincodes uit andere sites invullen.
+// --- Helper componenten ---
+
+// Eén-regel instelling met label, tooltip-button, en de control rechts.
+function InstellingRij({
+  label,
+  tooltip,
+  children,
+}: {
+  label: string;
+  tooltip?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-1.5">
+        <span>{label}</span>
+        {tooltip && <TooltipKnop tekst={tooltip} />}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+// Tap-toggle tooltip (geen hover want we mikken op iPad). Pop-over verschijnt
+// onder de knop; tap weg om te sluiten.
+function TooltipKnop({ tekst }: { tekst: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative inline-block">
+      <button
+        onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
+        className="w-5 h-5 rounded-full bg-gray-200 text-gray-600 text-xs font-bold flex items-center justify-center hover:bg-gray-300 transition-colors"
+        aria-label="Uitleg"
+      >
+        ⓘ
+      </button>
+      <AnimatePresence>
+        {open && (
+          <>
+            {/* Achtergrond-tap om te sluiten */}
+            <div
+              className="fixed inset-0 z-40"
+              onClick={() => setOpen(false)}
+            />
+            <motion.div
+              className="absolute z-50 top-7 right-0 bg-gray-800 text-white text-xs rounded-lg p-3 shadow-xl"
+              style={{ width: 240 }}
+              initial={{ opacity: 0, y: -5, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -5, scale: 0.95 }}
+              transition={{ duration: 0.15 }}
+            >
+              {tekst}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// Compact 4-cijfer pincode-invoerveld
 function PincodeVeld({
   label,
   waarde,

@@ -46,8 +46,18 @@ export default function OefeningPagina({ categorie, itemId }: OefeningPaginaProp
   // een stabiele actie-referentie (useMemo zou hier dus nooit re-evalueren).
   // De `voortgangItems` subscription hierboven garandeert dat we re-renderen
   // zodra markeerVoltooid de state wijzigt.
-  void voortgangItems; // expliciet markeren als gebruikt voor de subscription
   const niveau: Niveau = item ? huidigNiveau(item.id) : 'overtrekken';
+
+  // Detecteer of alle drie niveaus voor dit item al voltooid zijn. In dat geval
+  // tonen we een replay-modus ("tekenfeest") in plaats van het kind opnieuw
+  // door alle 3 niveaus te trekken — anders raakt het kind verward bij her-tap
+  // op een al voltooid item (persona "Bram" uit panel).
+  const isAllesVoltooid = item
+    ? (() => {
+        const v = voortgangItems[item.id];
+        return v ? v.niveau1 && v.niveau2 && v.niveau3 : false;
+      })()
+    : false;
 
   const audioSpeelFn = useCallback(
     (type: string) => {
@@ -113,7 +123,11 @@ export default function OefeningPagina({ categorie, itemId }: OefeningPaginaProp
 
     if (geslaagd && niveau === 'zelfstandig' && volgendNiveau === 'zelfstandig') {
       // Alle drie niveaus voor dit item al voltooid (en geen nieuwe diploma).
-      // Terug naar het overzicht.
+      // Terug naar het overzicht. Set sessie-flag zodat de overzichts-pagina
+      // weet dat ze het volgende item kan suggereren via audio.
+      try {
+        sessionStorage.setItem('letterlab:suggestVolgende', categorie);
+      } catch { /* sessionStorage kan disabled zijn */ }
       router.push(config.routePrefix);
       return;
     }
@@ -132,7 +146,11 @@ export default function OefeningPagina({ categorie, itemId }: OefeningPaginaProp
 
     const volgendNiveau = huidigNiveau(item.id);
     if (volgendNiveau === niveau) {
-      // Alle 3 niveaus van dit item klaar — terug naar overzicht.
+      // Alle 3 niveaus van dit item klaar — terug naar overzicht. Suggest-flag
+      // zetten zodat het overzicht het volgende item via audio kan voorstellen.
+      try {
+        sessionStorage.setItem('letterlab:suggestVolgende', categorie);
+      } catch { /* sessionStorage kan disabled zijn */ }
       router.push(config.routePrefix);
     }
     // Anders: blijf op de pagina; OefeningView remount via key-change.
@@ -141,13 +159,15 @@ export default function OefeningPagina({ categorie, itemId }: OefeningPaginaProp
   return (
     <div className="h-full">
       <OefeningView
-        // Key bevat zowel itemId als niveau. Bij elke wisseling unmount React de
-        // oude OefeningView en mount een schone nieuwe — daardoor reset al de
-        // lokale state (streken, feedback-overlay, disabled, kleur/dikte) en
-        // start de useEffect die de nieuwe niveau-instructie afspeelt.
-        key={`${item.id}-${niveau}`}
+        // Key bevat zowel itemId als niveau (en replay-flag). Bij elke wisseling
+        // unmount React de oude OefeningView en mount een schone nieuwe —
+        // daardoor reset al de lokale state (streken, feedback-overlay,
+        // disabled, kleur/dikte) en start de useEffect die de nieuwe
+        // niveau-instructie afspeelt.
+        key={`${item.id}-${niveau}-${isAllesVoltooid ? 'replay' : 'normaal'}`}
         item={item}
         niveau={niveau}
+        replayModus={isAllesVoltooid}
         onVoltooid={handleVoltooid}
         onTerug={() => router.push(config.routePrefix)}
         audioSpeelFn={audioSpeelFn}

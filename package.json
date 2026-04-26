@@ -11,6 +11,7 @@
     "icons": "bash scripts/maak-pwa-icons.sh"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "framer-motion": "^12.38.0",
     "next": "^14.2.35",
     "perfect-freehand": "^1.2.3",

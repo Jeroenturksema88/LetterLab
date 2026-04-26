@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from 'next';
 import { Nunito } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import AudioOntgrendelaar from '@/components/audio/AudioOntgrendelaar';
 import AudioToggle from '@/components/AudioToggle';
 import RotatieOverlay from '@/components/RotatieOverlay';
+import SessieLimietBewaker from '@/components/SessieLimietBewaker';
 import ServiceWorkerRegister from '@/components/ServiceWorkerRegister';
 import './globals.css';
 
@@ -61,7 +63,12 @@ export default function RootLayout({
         <AudioOntgrendelaar>{children}</AudioOntgrendelaar>
         <AudioToggle />
         <RotatieOverlay />
+        <SessieLimietBewaker />
         <ServiceWorkerRegister />
+        {/* Vercel Web Analytics — privacy-vriendelijk, geen cookies, alleen
+            geaggregeerde page-views en bezoekers. Helpt bij begrijpen welke
+            categorieën populair zijn en waar gebruikers afhaken. */}
+        <Analytics />
       </body>
     </html>
   );

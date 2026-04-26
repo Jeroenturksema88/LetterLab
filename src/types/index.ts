@@ -6,6 +6,9 @@ export type Niveau = 'overtrekken' | 'naschrijven' | 'zelfstandig';
 // links of rechts staat — voor een linkshandig kind staat het voorbeeld rechts
 // zodat de tekenende hand het niet bedekt.
 export type DominanteHand = 'links' | 'rechts';
+// Avatar-keuze in plaats van geslacht. Vier vriendelijke dieren — gender-neutraal,
+// inclusief, en een 3,5-jarige snapt eerder "kies een dier" dan "kies je geslacht".
+export type Avatar = 'kat' | 'hond' | 'aap' | 'vlinder';
 export type AudioType =
   | 'intro'
   | 'niveau1_instructie'
@@ -85,6 +88,11 @@ export interface Instellingen {
   pincode: string;
   dominanteHand: DominanteHand;
   evaluatie: EvaluatieInstellingen;
+  // Wanneer de huidige sessie begon (epoch ms). Wordt gebruikt om de
+  // sessieLimiet te enforce'n. Null = nog geen sessie gestart of net gereset.
+  sessieStartTijd: number | null;
+  // Heeft de ouder de eerste-keer dashboard-tour gezien? Voorkomt herhaling.
+  dashboardTourGezien: boolean;
 }
 
 export interface InstellingenState extends Instellingen {
