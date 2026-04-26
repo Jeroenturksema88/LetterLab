@@ -6,6 +6,26 @@ LetterLab is een iPad-geoptimaliseerde web-app waarmee Nore (3,5 jaar) en andere
 
 **Taal van de app: Nederlands.** UI-teksten (waar relevant), audio-scripts, comments in code, commit messages — alles in het Nederlands.
 
+## Knowledge sync naar Obsidian — DOEN NIET OVERSLAAN
+
+De durable kennis voor dit project leeft in het Obsidian-vault onder `claude/Projects/letterlab/`. Deze `CLAUDE.md` is een korte-termijn pointer; de vault is de bron van waarheid.
+
+**Bij start van elke significante sessie**: lees relevante notities. Voor audio-werk → [[Lessons]] § iOS Safari. Voor canvas-werk → [[Lessons]] § canvas. Voor deploy/Vercel → [[Lessons]] § Vercel.
+
+**Bij einde van elke significante sessie**: update Obsidian voor je sluit. Pas alleen de relevante items aan:
+
+1. **Tracklog.md** — gedateerde entry: probleem → root cause → fix → commit-hash → deploy-resultaat. Verplicht voor élke fix/feature/incident.
+2. **Changelog.md** — als de wijziging zichtbaar is voor de gebruiker, voeg toe aan huidige of nieuwe release-sectie.
+3. **Backlog.md** — nieuwe ideeën erbij (P2 default), opgeloste items eraf, prioriteiten herzien.
+4. **Known Issues.md** — nieuwe bugs erbij, opgeloste eraf, status van re-enable't-zichzelf items checken.
+5. **Lessons.md** — als je dacht "dit had ik kunnen weten voordat ik begon", voeg een bullet toe onder het juiste domein. Concreet, met context, met actie. Zo wordt het project elke iteratie slimmer.
+6. **Architecture.md** — alleen bij stack/structuur/pattern-wijzigingen.
+7. **README.md** — alleen bij URL/hosting/contributor-wijzigingen.
+
+Behoud `[[wikilink]]` cross-references. Lees bestaande notities voor je herschrijft (Obsidian MCP-tools `read_note`, `write_note`). Sync gebeurt expliciet via deze tools — niet via shell-bewerking.
+
+Reden dat deze sectie bovenaan staat: vergeten te syncen = volgende sessie weet niet meer waarom een keuze gemaakt is = dezelfde fout opnieuw maken. We hebben de [[Lessons]] juist om dat te voorkomen.
+
 ## Tech Stack
 
 | Component | Technologie |
