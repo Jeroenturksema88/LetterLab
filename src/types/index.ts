@@ -2,6 +2,10 @@
 
 export type Categorie = 'letters' | 'cijfers' | 'vormen';
 export type Niveau = 'overtrekken' | 'naschrijven' | 'zelfstandig';
+// Dominante hand van het kind. Bepaalt of bij naschrijven het voorbeeld
+// links of rechts staat — voor een linkshandig kind staat het voorbeeld rechts
+// zodat de tekenende hand het niet bedekt.
+export type DominanteHand = 'links' | 'rechts';
 export type AudioType =
   | 'intro'
   | 'niveau1_instructie'
@@ -79,6 +83,7 @@ export interface Instellingen {
   actieveCategorieen: Categorie[];
   sessieLimiet: number;
   pincode: string;
+  dominanteHand: DominanteHand;
   evaluatie: EvaluatieInstellingen;
 }
 
@@ -90,6 +95,9 @@ export interface InstellingenState extends Instellingen {
 export interface OvertrekResultaat {
   type: 'overtrekken';
   dekking: number;
+  // Minimale dekking over alle segmenten — vangt het geval dat één deel
+  // van het pad keurig overgetrokken is en de rest leeg.
+  minSegmentDekking: number;
   geslaagd: boolean;
   feedback: FeedbackType;
 }
@@ -102,6 +110,7 @@ export interface SimilarityResultaat {
   details: {
     proportieScore: number;
     richtingScore: number;
+    chamferScore: number;
     overlapScore: number;
   };
 }

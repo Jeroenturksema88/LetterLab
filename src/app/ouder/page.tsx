@@ -22,7 +22,7 @@ export default function OuderDashboard() {
   const [ontgrendeld, setOntgrendeld] = useState(false);
   const [pinFout, setPinFout] = useState(false);
 
-  const { pincode, audioAan, sessieLimiet, updateInstellingen, evaluatie } = useInstellingenStore();
+  const { pincode, audioAan, sessieLimiet, updateInstellingen, evaluatie, dominanteHand } = useInstellingenStore();
   const { items, aantalSterren, resetItem, resetAlles } = useVoortgangStore();
   const { naam, geslacht, profielIngesteld, reset: resetProfiel } = useProfielStore();
 
@@ -174,6 +174,27 @@ export default function OuderDashboard() {
               </select>
             </div>
 
+            <div className="flex items-center justify-between">
+              <span>Schrijfhand</span>
+              <div className="flex gap-2">
+                {(['links', 'rechts'] as const).map((hand) => (
+                  <button
+                    key={hand}
+                    onClick={() => updateInstellingen({ dominanteHand: hand })}
+                    className={`px-4 py-1.5 rounded-lg font-semibold text-sm transition-colors ${
+                      dominanteHand === hand
+                        ? hand === 'links'
+                          ? 'bg-violet-100 text-violet-700 border-2 border-violet-400'
+                          : 'bg-emerald-100 text-emerald-700 border-2 border-emerald-400'
+                        : 'bg-gray-50 text-gray-500 border-2 border-transparent'
+                    }`}
+                  >
+                    {hand === 'links' ? '🤚 Links' : 'Rechts ✋'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div>
               <span className="block mb-2">Evaluatie-drempels</span>
               <div className="space-y-2 text-sm">
@@ -200,6 +221,28 @@ export default function OuderDashboard() {
                     <span className="w-12 text-right">{Math.round(waarde * 100)}%</span>
                   </div>
                 ))}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span>Wachttijd voor auto-evaluatie</span>
+              <div className="flex items-center gap-2">
+                <input
+                  type="range"
+                  min="3000"
+                  max="20000"
+                  step="1000"
+                  value={evaluatie.inactiviteitTimeout}
+                  onChange={(e) =>
+                    updateInstellingen({
+                      evaluatie: { ...evaluatie, inactiviteitTimeout: parseInt(e.target.value, 10) },
+                    })
+                  }
+                  className="w-32"
+                />
+                <span className="w-12 text-right text-sm text-gray-600">
+                  {Math.round(evaluatie.inactiviteitTimeout / 1000)}s
+                </span>
               </div>
             </div>
           </div>

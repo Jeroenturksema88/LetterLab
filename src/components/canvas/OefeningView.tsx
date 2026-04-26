@@ -125,10 +125,14 @@ export default function OefeningView({
     return () => window.removeEventListener('resize', updateGrootte);
   }, []);
 
-  // Instellingen ophalen voor evaluatiedrempels
+  // Instellingen ophalen voor evaluatiedrempels en hand-voorkeur
   const evaluatieInstellingen = useInstellingenStore((state) => state.evaluatie);
+  const dominanteHand = useInstellingenStore((state) => state.dominanteHand);
 
   const isNaschrijven = niveau === 'naschrijven';
+  // Linkshandig kind: voorbeeld rechts, canvas links zodat de tekenende hand
+  // het voorbeeld niet bedekt.
+  const voorbeeldRechts = dominanteHand === 'links';
 
   // Canvas afmetingen berekenen: ~80% van viewport hoogte minus header (64px)
   const headerHoogte = 64;
@@ -364,9 +368,16 @@ export default function OefeningView({
         </div>
       </div>
 
-      {/* Canvas-gebied — neemt alle beschikbare hoogte in */}
-      <div className="flex-1 flex items-center justify-center gap-4 px-4 pb-4">
-        {/* Voorbeeld-canvas voor naschrijven (links, kleiner).
+      {/* Canvas-gebied — neemt alle beschikbare hoogte in.
+          Bij naschrijven: voorbeeld staat standaard links, canvas rechts.
+          Voor een linkshandig kind wisselt de volgorde via flex-row-reverse
+          zodat de tekenende hand het voorbeeld niet bedekt. */}
+      <div
+        className={`flex-1 flex items-center justify-center gap-4 px-4 pb-4 ${
+          isNaschrijven && voorbeeldRechts ? 'flex-row-reverse' : ''
+        }`}
+      >
+        {/* Voorbeeld-canvas voor naschrijven.
             Heeft een "kijk-icoon" (oog) bovenin zodat het kind zonder tekst snapt
             dat dit voorbeeld is om naar te kijken, niet om op te tekenen. Subtiele
             sluier en geen pointer-events maken visueel duidelijk dat tekenen hier
@@ -512,7 +523,9 @@ export default function OefeningView({
         </div>
       </div>
 
-      {/* Klaar-knop: altijd zichtbaar, maar dimmed als er geen streken zijn */}
+      {/* Klaar-knop: altijd zichtbaar. Pulseert zachtjes zodra het kind iets
+          getekend heeft — visuele uitnodiging om te tikken als ze klaar zijn.
+          Dit verkleint de behoefte om op de inactiviteit-timer te leunen. */}
       {!disabled && (
         <div className="flex justify-center pb-3">
           <motion.button
@@ -524,6 +537,18 @@ export default function OefeningView({
               backgroundColor: streken.length > 0 ? '#22C55E' : '#D1D5DB',
             }}
             whileTap={streken.length > 0 ? { scale: 0.9 } : {}}
+            // Subtiele schaal-puls die alleen draait als er streken zijn:
+            // trekt de blik naar de knop zonder afleidend te zijn.
+            animate={
+              streken.length > 0
+                ? { scale: [1, 1.08, 1], boxShadow: ['0 4px 12px rgba(34,197,94,0.3)', '0 6px 20px rgba(34,197,94,0.55)', '0 4px 12px rgba(34,197,94,0.3)'] }
+                : { scale: 1 }
+            }
+            transition={
+              streken.length > 0
+                ? { duration: 1.4, repeat: Infinity, ease: 'easeInOut' }
+                : { duration: 0.2 }
+            }
             disabled={streken.length === 0}
             aria-label="Klaar"
           >

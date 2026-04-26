@@ -1,64 +1,94 @@
 // lib/stroke-matching.ts — Geometrische stroke-matching evaluatie
 //
 // Geen ML/OCR — puur geometrische vergelijking op basis van:
-// - Proximity (dekking van het template-pad)
-// - Proportie, richting en overlap (similarity)
+// - Proximity (dekking van het template-pad), per segment om "krabbel-in-één-zone"
+//   te voorkomen.
+// - Proportie, richting, Chamfer-distance en overlap (similarity).
 
 import type { Punt, TekenPunt, StreekDef, OvertrekResultaat, SimilarityResultaat, FeedbackType } from '@/types';
 import { samplePad, normaliseerStreken } from '@/lib/pad-normalisatie';
-import { afstand, vergelijkProportie, vergelijkStrokeRichtingen, vergelijkOverlap } from '@/lib/scoring';
+import {
+  afstand,
+  vergelijkProportie,
+  vergelijkStrokeRichtingen,
+  vergelijkOverlap,
+  vergelijkChamfer,
+} from '@/lib/scoring';
+
+const AANTAL_SEGMENTEN = 4;
 
 /**
  * Evalueer een overtrekpoging (niveau 1).
  *
- * Samplet het template-pad naar 100 punten en telt hoeveel daarvan
- * "bedekt" worden door de gebruiker (d.w.z. binnen de marge liggen).
- * Geeft een dekkingsratio terug (0-1).
+ * Drie checks (gecombineerd):
+ * 1. Globale dekking — wat % van het template-pad is bedekt door gebruikerspunten?
+ * 2. Per-segment dekking — verdeel het pad in N segmenten; minimum dekking
+ *    per segment moet redelijk zijn. Voorkomt dat een kind één deel keurig
+ *    overtrekt en de rest leeg laat ("krabbel-in-een-zone-pass").
+ * 3. Niet teveel overschot — als de gebruiker veel meer punten heeft buiten
+ *    het pad dan erop, is het waarschijnlijk een willekeurige krabbel.
  */
 export function evalueerOvertrekking(
   gebruikersPunten: TekenPunt[],
   templatePadPunten: Punt[],
   marge: number
 ): OvertrekResultaat {
-  // Sample het template-pad naar 100 gelijkmatig verdeelde punten
   const templateSamples = samplePad(templatePadPunten, 100);
 
   if (templateSamples.length === 0 || gebruikersPunten.length === 0) {
     return {
       type: 'overtrekken',
       dekking: 0,
+      minSegmentDekking: 0,
       geslaagd: false,
       feedback: 'aanmoediging',
     };
   }
 
-  // Tel hoeveel template-punten "bedekt" zijn door gebruikerspunten
-  let bedektePunten = 0;
-
-  for (const templatePunt of templateSamples) {
-    let isBedekt = false;
-
+  // Voor elke template-sample: is er een gebruikerspunt binnen marge?
+  // Markeer per sample of die bedekt is, zodat we én globaal én per segment kunnen
+  // tellen.
+  const bedektPerSample: boolean[] = templateSamples.map((templatePunt) => {
     for (const gebruikersPunt of gebruikersPunten) {
-      if (afstand(templatePunt, gebruikersPunt) <= marge) {
-        isBedekt = true;
-        break;
-      }
+      if (afstand(templatePunt, gebruikersPunt) <= marge) return true;
     }
+    return false;
+  });
 
-    if (isBedekt) {
-      bedektePunten++;
-    }
+  // Globale dekking
+  const totaalBedekt = bedektPerSample.filter(Boolean).length;
+  const dekking = totaalBedekt / templateSamples.length;
+
+  // Per-segment dekking. Verdeel de samples in N segmenten en bereken voor elk
+  // welk percentage bedekt is. De minimale segment-dekking wordt meegenomen.
+  const segmentGrootte = templateSamples.length / AANTAL_SEGMENTEN;
+  let minSegmentDekking = 1;
+  for (let s = 0; s < AANTAL_SEGMENTEN; s++) {
+    const start = Math.floor(s * segmentGrootte);
+    const eind = Math.floor((s + 1) * segmentGrootte);
+    const segment = bedektPerSample.slice(start, eind);
+    if (segment.length === 0) continue;
+    const segmentDekking = segment.filter(Boolean).length / segment.length;
+    if (segmentDekking < minSegmentDekking) minSegmentDekking = segmentDekking;
   }
 
-  const dekking = bedektePunten / templateSamples.length;
+  // Combinatie-eindscore: gewogen gemiddelde van globale dekking en
+  // minimale segment-dekking. De gemiddelde-eis voorkomt dat één leeg segment
+  // de hele evaluatie kapt (bv. als kind net een puntje miste), maar
+  // straft een krabbel die maar één derde van het pad raakt.
+  const eindscore = dekking * 0.6 + minSegmentDekking * 0.4;
 
-  // Standaard drempel voor overtrekken is 70% (configureerbaar via instellingen)
-  const geslaagd = dekking >= 0.70;
+  // Drempel-vergelijking gebeurt verderop in evalueerOvertrekking-aanroeper
+  // (huidigeOvertrekDrempel uit instellingen). We berekenen hier de score; de
+  // aanroeper bepaalt wat "geslaagd" betekent. Voor backwards compat behouden
+  // we ook een interne default-drempel.
+  const geslaagd = eindscore >= 0.6;
   const feedback: FeedbackType = geslaagd ? 'succes' : 'aanmoediging';
 
   return {
     type: 'overtrekken',
-    dekking,
+    dekking: eindscore,
+    minSegmentDekking,
     geslaagd,
     feedback,
   };
@@ -67,11 +97,14 @@ export function evalueerOvertrekking(
 /**
  * Evalueer similarity voor niveau 2 (naschrijven) en niveau 3 (zelfstandig).
  *
- * Normaliseert beide sets streken naar een 0-1 bounding box,
- * berekent dan een gewogen score uit:
- * - Proportie (0.3): vergelijking van aspect ratio's
- * - Richting (0.3): vergelijking van dominante streekrichtingen
- * - Overlap (0.4): rasterisatie naar 20x20 grid, IoU berekening
+ * Normaliseert beide sets streken naar een 0-1 bounding box, berekent dan een
+ * gewogen score uit:
+ * - Proportie (0.20): aspect ratio's vergelijken.
+ * - Richting (0.10): dominante streekrichtingen vergelijken (zwak gewicht
+ *   omdat 3,5-jarigen streken in willekeurige richting tekenen).
+ * - Chamfer-distance (0.45): hoofdgewicht — robuuste vorm-similariteit die
+ *   tolerant is voor lijn-positie en -dikte.
+ * - Overlap/IoU (0.25): klassieke pixel-overlap als secondaire check.
  */
 export function evalueerSimilarity(
   gebruikersStreken: TekenPunt[][],
@@ -88,13 +121,11 @@ export function evalueerSimilarity(
 
   // Normaliseer beide sets naar 0-1 bounding box
   const genormaliseerdeGebruiker = normaliseerStreken(
-    gebruikersStreken.map((punten) =>
-      punten.map((p) => ({ x: p.x, y: p.y }))
-    )
+    gebruikersStreken.map((punten) => punten.map((p) => ({ x: p.x, y: p.y })))
   );
   const genormaliseerdeTemplate = normaliseerStreken(templatePuntArrays);
 
-  // Bereken de drie deelscores
+  // Vier deelscores
   const proportieScore = vergelijkProportie(
     genormaliseerdeGebruiker.flat(),
     genormaliseerdeTemplate.flat()
@@ -103,17 +134,24 @@ export function evalueerSimilarity(
     genormaliseerdeGebruiker,
     genormaliseerdeTemplate
   );
+  const chamferScore = vergelijkChamfer(
+    genormaliseerdeGebruiker,
+    genormaliseerdeTemplate
+  );
   const overlapScore = vergelijkOverlap(
     genormaliseerdeGebruiker,
     genormaliseerdeTemplate
   );
 
-  // Gewogen totaalscore — overlap is het belangrijkst, richting het minst
-  // (kinderen tekenen streken in willekeurige volgorde/richting)
+  // Gewogen totaalscore. Chamfer is hoofdgewicht omdat het de meest robuuste
+  // vorm-similariteit geeft op kindertekeningen. Overlap als secondaire check;
+  // proportie zorgt dat extreem misvormde vormen niet slagen; richting is
+  // bewust laag (kinderen tekenen vaak in willekeurige richting/volgorde).
   const score =
-    proportieScore * 0.3 +
-    richtingScore * 0.15 +
-    overlapScore * 0.55;
+    proportieScore * 0.20 +
+    richtingScore * 0.10 +
+    chamferScore * 0.45 +
+    overlapScore * 0.25;
 
   const geslaagd = score >= drempel;
   const feedback: FeedbackType = geslaagd ? 'succes' : 'aanmoediging';
@@ -126,6 +164,7 @@ export function evalueerSimilarity(
     details: {
       proportieScore,
       richtingScore,
+      chamferScore,
       overlapScore,
     },
   };

@@ -1,7 +1,7 @@
 // lib/scoring.ts — Scoring-utilities voor stroke-evaluatie
 //
 // Bevat geometrische vergelijkingsfuncties voor proportie,
-// streekrichting en overlap (IoU op een 20x20 raster).
+// streekrichting, Chamfer-distance en overlap (IoU op een 20x20 raster).
 
 import type { Punt, BoundingBox } from '@/types';
 
@@ -238,4 +238,56 @@ export function vergelijkOverlap(
   if (vereniging === 0) return 0;
 
   return doorsnede / vereniging;
+}
+
+/**
+ * Vergelijk twee sets streken via een symmetrische Chamfer-distance.
+ *
+ * Voor elk punt in A: vind de afstand tot het dichtstbijzijnde punt in B
+ * (en omgekeerd). Het gemiddelde van die afstanden is de Chamfer-distance.
+ * Lager = beter. Hier converteren we naar een score 0-1 (1 = perfect, 0 = ver weg).
+ *
+ * Voordeel boven IoU: Chamfer is veel toleranter voor vorm-verschuivingen en
+ * lijn-dikte. Een kind dat de A-vorm tekent maar de stippen niet exact in
+ * dezelfde 20x20-cellen raakt, krijgt bij IoU een lage score maar bij Chamfer
+ * een goede score zolang de algemene vorm klopt.
+ *
+ * Beide invoeren moeten al genormaliseerd zijn naar 0-1 bbox.
+ */
+export function vergelijkChamfer(
+  gebruiker: Punt[][],
+  template: Punt[][]
+): number {
+  const gebruikerPunten = gebruiker.flat();
+  const templatePunten = template.flat();
+
+  if (gebruikerPunten.length === 0 || templatePunten.length === 0) return 0;
+
+  // Helper: gemiddelde afstand van elk punt in A tot dichtstbijzijnde in B
+  function gemiddeldeMinAfstand(a: Punt[], b: Punt[]): number {
+    let totaal = 0;
+    for (const p of a) {
+      let minDist = Infinity;
+      for (const q of b) {
+        const dx = p.x - q.x;
+        const dy = p.y - q.y;
+        const d = dx * dx + dy * dy; // squared, sqrt pas later
+        if (d < minDist) minDist = d;
+      }
+      totaal += Math.sqrt(minDist);
+    }
+    return totaal / a.length;
+  }
+
+  // Symmetrisch: gemiddelde van beide richtingen
+  const aNaarB = gemiddeldeMinAfstand(gebruikerPunten, templatePunten);
+  const bNaarA = gemiddeldeMinAfstand(templatePunten, gebruikerPunten);
+  const chamfer = (aNaarB + bNaarA) / 2;
+
+  // In genormaliseerde 0-1 ruimte is een afstand van ~0.4 al "ver weg"
+  // (diagonaal van bbox = sqrt(2) ≈ 1.41). We mappen via een soepele kromme:
+  // chamfer 0 → score 1; chamfer 0.1 → score ~0.85; chamfer 0.3 → score ~0.4;
+  // chamfer 0.5+ → score → 0. Exponentieel verval geeft natuurlijk gevoel.
+  const score = Math.exp(-chamfer * 4);
+  return Math.max(0, Math.min(1, score));
 }

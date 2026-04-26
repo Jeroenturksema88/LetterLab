@@ -16,6 +16,8 @@ const standaardInstellingen: Instellingen = {
   actieveCategorieen: ['letters', 'cijfers', 'vormen'],
   sessieLimiet: 15,
   pincode: '1234',
+  // Default rechts; ouder kan switchen via profiel of dashboard.
+  dominanteHand: 'rechts',
   evaluatie: {
     // Overtrekken: 60% van het pad moet bedekt zijn — pittig genoeg dat er echt
     // langs het pad getekend wordt, soepel genoeg dat een 3,5-jarige slaagt.
@@ -27,10 +29,12 @@ const standaardInstellingen: Instellingen = {
     // Hoeveel pixels (in template-coördinaten) een teken-punt mag afwijken om als
     // "op het pad" te gelden tijdens overtrekken.
     proximityMarge: 45,
-    // Aantal milliseconden zonder nieuwe streek voordat automatisch geëvalueerd wordt.
-    // 6000ms is een goede balans: tijd voor het kind om de pen op te tillen en even
-    // te kijken, maar niet zo lang dat ze afgeleid raken.
-    inactiviteitTimeout: 6000,
+    // Aantal milliseconden zonder nieuwe streek voordat automatisch geëvalueerd
+    // wordt. 10s is genereus — een 3,5-jarige denkt soms even na, tilt de pen op
+    // om te kijken, etc. Te kort = frustratie ("ik was nog niet klaar!"). Voor
+    // expliciete bevestiging is er de groene klaar-knop die pulseert zodra er
+    // streken zijn.
+    inactiviteitTimeout: 10000,
   },
 };
 
@@ -62,11 +66,10 @@ export const useInstellingenStore = create<InstellingenState>()(
     }),
     {
       name: 'letterlab-instellingen',
-      // Bij version-bump verhoog je dit getal; oudere persisted state wordt dan
-      // genegeerd en standaardwaarden worden opnieuw geladen. Belangrijk wanneer
-      // we evaluatiedrempels herzien — anders blijven gebruikers met oude waardes
-      // hangen.
-      version: 2,
+      // v3: dominanteHand toegevoegd, inactiviteit-timeout verhoogd naar 10s,
+      // evaluatie-algoritme uitgebreid met segment-check + Chamfer. Bestaande
+      // gebruikers krijgen zo automatisch de nieuwe defaults.
+      version: 3,
     }
   )
 );

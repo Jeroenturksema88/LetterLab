@@ -1,16 +1,24 @@
 'use client';
 
-// app/profiel/page.tsx — Profielinstelling-scherm (ouder helpt kind)
+// app/profiel/page.tsx — Profielinstelling-scherm (ouder helpt kind).
+// Drie keuzes: geslacht (verplicht), dominante hand (default rechts) en naam
+// (optioneel — fallback "Vriendje" voor 3,5-jarigen die niet typen).
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useProfielStore } from '@/stores/profiel-store';
+import { useInstellingenStore } from '@/stores/instellingen-store';
+import type { DominanteHand } from '@/types';
 
 export default function ProfielPagina() {
   const router = useRouter();
   const { setNaam, setGeslacht, markeerProfielIngesteld, geslacht, naam } = useProfielStore();
+  const huidigeHand = useInstellingenStore((s) => s.dominanteHand);
+  const updateInstellingen = useInstellingenStore((s) => s.updateInstellingen);
+
   const [gekozenGeslacht, setGekozenGeslacht] = useState<'jongen' | 'meisje' | null>(geslacht);
+  const [gekozenHand, setGekozenHand] = useState<DominanteHand>(huidigeHand);
   const [invoerNaam, setInvoerNaam] = useState(naam || '');
 
   const handleBevestig = () => {
@@ -22,6 +30,7 @@ export default function ProfielPagina() {
 
     setNaam(naamOmTeOpslaan);
     setGeslacht(gekozenGeslacht);
+    updateInstellingen({ dominanteHand: gekozenHand });
     markeerProfielIngesteld();
     router.push('/');
   };
@@ -35,7 +44,7 @@ export default function ProfielPagina() {
   const isGereed = gekozenGeslacht !== null;
 
   return (
-    <div className="h-full relative overflow-hidden flex flex-col items-center justify-center gap-10 p-8">
+    <div className="h-full relative overflow-hidden flex flex-col items-center justify-center gap-6 p-8">
       {/* Achtergrond — zachte warme gradient */}
       <div
         className="absolute inset-0 -z-10"
@@ -94,8 +103,8 @@ export default function ProfielPagina() {
           onClick={() => handleGeslachtKeuze('jongen')}
           className="relative flex items-center justify-center rounded-[2rem] cursor-pointer outline-none focus:outline-none"
           style={{
-            width: 180,
-            height: 200,
+            width: 160,
+            height: 180,
             background: gekozenGeslacht === 'jongen'
               ? 'linear-gradient(135deg, #BFDBFE 0%, #93C5FD 100%)'
               : 'linear-gradient(135deg, #F0F4FF 0%, #E0E8FF 100%)',
@@ -110,35 +119,14 @@ export default function ProfielPagina() {
           whileTap={{ scale: 0.92 }}
         >
           {/* Jongen silhouet SVG */}
-          <svg width="90" height="130" viewBox="0 0 90 130" fill="none">
-            {/* Hoofd */}
+          <svg width="80" height="115" viewBox="0 0 90 130" fill="none">
             <circle cx="45" cy="30" r="22" fill={gekozenGeslacht === 'jongen' ? '#3B82F6' : '#94A3B8'} />
-            {/* Haar (kort) */}
             <path d="M23 28C23 14 33 8 45 8C57 8 67 14 67 28" fill={gekozenGeslacht === 'jongen' ? '#2563EB' : '#64748B'} />
-            {/* Lichaam */}
-            <path
-              d="M45 52V82"
-              stroke={gekozenGeslacht === 'jongen' ? '#3B82F6' : '#94A3B8'}
-              strokeWidth="8"
-              strokeLinecap="round"
-            />
-            {/* Armen */}
-            <path
-              d="M45 62L25 78M45 62L65 78"
-              stroke={gekozenGeslacht === 'jongen' ? '#3B82F6' : '#94A3B8'}
-              strokeWidth="7"
-              strokeLinecap="round"
-            />
-            {/* Benen */}
-            <path
-              d="M45 82L30 115M45 82L60 115"
-              stroke={gekozenGeslacht === 'jongen' ? '#3B82F6' : '#94A3B8'}
-              strokeWidth="7"
-              strokeLinecap="round"
-            />
+            <path d="M45 52V82" stroke={gekozenGeslacht === 'jongen' ? '#3B82F6' : '#94A3B8'} strokeWidth="8" strokeLinecap="round" />
+            <path d="M45 62L25 78M45 62L65 78" stroke={gekozenGeslacht === 'jongen' ? '#3B82F6' : '#94A3B8'} strokeWidth="7" strokeLinecap="round" />
+            <path d="M45 82L30 115M45 82L60 115" stroke={gekozenGeslacht === 'jongen' ? '#3B82F6' : '#94A3B8'} strokeWidth="7" strokeLinecap="round" />
           </svg>
 
-          {/* Selectie-vinkje */}
           {gekozenGeslacht === 'jongen' && (
             <motion.div
               className="absolute top-3 right-3 w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center"
@@ -158,8 +146,8 @@ export default function ProfielPagina() {
           onClick={() => handleGeslachtKeuze('meisje')}
           className="relative flex items-center justify-center rounded-[2rem] cursor-pointer outline-none focus:outline-none"
           style={{
-            width: 180,
-            height: 200,
+            width: 160,
+            height: 180,
             background: gekozenGeslacht === 'meisje'
               ? 'linear-gradient(135deg, #FBCFE8 0%, #F9A8D4 100%)'
               : 'linear-gradient(135deg, #FFF0F6 0%, #FFE4EE 100%)',
@@ -173,38 +161,17 @@ export default function ProfielPagina() {
           }}
           whileTap={{ scale: 0.92 }}
         >
-          {/* Meisje silhouet SVG */}
-          <svg width="90" height="130" viewBox="0 0 90 130" fill="none">
-            {/* Hoofd */}
+          <svg width="80" height="115" viewBox="0 0 90 130" fill="none">
             <circle cx="45" cy="30" r="22" fill={gekozenGeslacht === 'meisje' ? '#EC4899' : '#94A3B8'} />
-            {/* Haar (lang) */}
             <path
               d="M23 28C23 14 33 8 45 8C57 8 67 14 67 28L70 55C70 55 62 48 55 48L54 35C54 35 50 40 45 40C40 40 36 35 36 35L35 48C28 48 20 55 20 55L23 28Z"
               fill={gekozenGeslacht === 'meisje' ? '#DB2777' : '#64748B'}
             />
-            {/* Lichaam (jurk-vorm) */}
-            <path
-              d="M45 52L32 95L58 95L45 52Z"
-              fill={gekozenGeslacht === 'meisje' ? '#EC4899' : '#94A3B8'}
-              strokeLinecap="round"
-            />
-            {/* Armen */}
-            <path
-              d="M38 60L22 76M52 60L68 76"
-              stroke={gekozenGeslacht === 'meisje' ? '#EC4899' : '#94A3B8'}
-              strokeWidth="7"
-              strokeLinecap="round"
-            />
-            {/* Benen */}
-            <path
-              d="M38 95L32 120M52 95L58 120"
-              stroke={gekozenGeslacht === 'meisje' ? '#EC4899' : '#94A3B8'}
-              strokeWidth="7"
-              strokeLinecap="round"
-            />
+            <path d="M45 52L32 95L58 95L45 52Z" fill={gekozenGeslacht === 'meisje' ? '#EC4899' : '#94A3B8'} strokeLinecap="round" />
+            <path d="M38 60L22 76M52 60L68 76" stroke={gekozenGeslacht === 'meisje' ? '#EC4899' : '#94A3B8'} strokeWidth="7" strokeLinecap="round" />
+            <path d="M38 95L32 120M52 95L58 120" stroke={gekozenGeslacht === 'meisje' ? '#EC4899' : '#94A3B8'} strokeWidth="7" strokeLinecap="round" />
           </svg>
 
-          {/* Selectie-vinkje */}
           {gekozenGeslacht === 'meisje' && (
             <motion.div
               className="absolute top-3 right-3 w-8 h-8 rounded-full bg-pink-500 flex items-center justify-center"
@@ -218,6 +185,27 @@ export default function ProfielPagina() {
             </motion.div>
           )}
         </motion.button>
+      </motion.div>
+
+      {/* Hand-keuze — twee handjes met palm-naar-jou.
+          Kleinere knoppen dan geslacht (secondaire info) maar nog steeds groot
+          genoeg voor kindervingers. Default = rechts; ouder kan switchen. */}
+      <motion.div
+        className="flex gap-4 md:gap-6 relative z-10"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.5, type: 'spring', stiffness: 120 }}
+      >
+        <HandKnop
+          hand="links"
+          gekozen={gekozenHand === 'links'}
+          onClick={() => setGekozenHand('links')}
+        />
+        <HandKnop
+          hand="rechts"
+          gekozen={gekozenHand === 'rechts'}
+          onClick={() => setGekozenHand('rechts')}
+        />
       </motion.div>
 
       {/* Naam-invoerveld — de ene plek waar tekst OK is (ouder vult in) */}
@@ -234,7 +222,7 @@ export default function ProfielPagina() {
           placeholder="Naam..."
           maxLength={20}
           autoComplete="off"
-          className="w-full text-center text-2xl md:text-3xl font-bold rounded-2xl py-4 px-6 outline-none"
+          className="w-full text-center text-2xl md:text-3xl font-bold rounded-2xl py-3 px-6 outline-none"
           style={{
             background: 'rgba(255, 255, 255, 0.8)',
             border: '3px solid rgba(255, 255, 255, 0.9)',
@@ -257,8 +245,8 @@ export default function ProfielPagina() {
           disabled={!isGereed}
           className="flex items-center justify-center rounded-full cursor-pointer outline-none focus:outline-none disabled:cursor-not-allowed"
           style={{
-            width: 80,
-            height: 80,
+            width: 72,
+            height: 72,
             background: isGereed
               ? 'linear-gradient(135deg, #34D399 0%, #10B981 50%, #059669 100%)'
               : 'linear-gradient(135deg, #D1D5DB 0%, #9CA3AF 100%)',
@@ -272,12 +260,93 @@ export default function ProfielPagina() {
           animate={isGereed ? { y: [0, -4, 0] } : {}}
           transition={isGereed ? { duration: 1.5, repeat: Infinity, ease: 'easeInOut' } as any : undefined}
         >
-          {/* Pijl-icoon naar rechts */}
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="white" stroke="none">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="white" stroke="none">
             <path d="M5 12h14M13 5l7 7-7 7" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </motion.button>
       </motion.div>
     </div>
+  );
+}
+
+// Compacte hand-knop met palm-naar-jou silhouet. Spiegelbeeld voor links/rechts.
+function HandKnop({
+  hand,
+  gekozen,
+  onClick,
+}: {
+  hand: DominanteHand;
+  gekozen: boolean;
+  onClick: () => void;
+}) {
+  const accent = hand === 'links' ? '#7C3AED' : '#059669';
+  const accentLicht = hand === 'links' ? '#DDD6FE' : '#A7F3D0';
+  const accentZacht = hand === 'links' ? '#F5F3FF' : '#ECFDF5';
+
+  return (
+    <motion.button
+      onClick={onClick}
+      className="relative flex items-center justify-center rounded-[1.5rem] cursor-pointer outline-none focus:outline-none"
+      style={{
+        width: 110,
+        height: 110,
+        background: gekozen
+          ? `linear-gradient(135deg, ${accentLicht} 0%, ${accentLicht}CC 100%)`
+          : `linear-gradient(135deg, ${accentZacht} 0%, #FFFFFF 100%)`,
+        border: gekozen
+          ? `4px solid ${accent}`
+          : '3px solid rgba(255,255,255,0.8)',
+        boxShadow: gekozen
+          ? `0 6px 20px -4px ${accent}40, inset 0 2px 4px rgba(255,255,255,0.6)`
+          : '0 4px 14px -4px rgba(0,0,0,0.08), inset 0 2px 4px rgba(255,255,255,0.6)',
+        transition: 'border 0.2s, box-shadow 0.2s',
+      }}
+      whileTap={{ scale: 0.92 }}
+      aria-label={hand === 'links' ? 'Linkshandig' : 'Rechtshandig'}
+      aria-pressed={gekozen}
+    >
+      {/* Hand-silhouet: vier vingers omhoog + duim opzij. Voor links: duim rechts.
+          Voor rechts: duim links. Spiegelen via scaleX(-1). */}
+      <svg
+        width="62"
+        height="68"
+        viewBox="0 0 60 68"
+        fill="none"
+        style={{ transform: hand === 'rechts' ? 'scaleX(-1)' : undefined }}
+      >
+        {/* Palm */}
+        <path
+          d="M14 30 L14 56 Q14 64 22 64 L42 64 Q50 64 50 56 L50 30 Q50 24 44 24 L20 24 Q14 24 14 30 Z"
+          fill={gekozen ? accent : '#94A3B8'}
+        />
+        {/* Vinger 1 (pink) */}
+        <rect x="16" y="14" width="7" height="14" rx="3.5" fill={gekozen ? accent : '#94A3B8'} />
+        {/* Vinger 2 (ring) */}
+        <rect x="24" y="8" width="7" height="20" rx="3.5" fill={gekozen ? accent : '#94A3B8'} />
+        {/* Vinger 3 (middel) */}
+        <rect x="32" y="4" width="7" height="24" rx="3.5" fill={gekozen ? accent : '#94A3B8'} />
+        {/* Vinger 4 (wijs) */}
+        <rect x="40" y="10" width="7" height="18" rx="3.5" fill={gekozen ? accent : '#94A3B8'} />
+        {/* Duim — opzij gestoken */}
+        <path
+          d="M14 38 L6 44 Q2 47 4 52 Q6 56 11 54 L14 50 Z"
+          fill={gekozen ? accent : '#94A3B8'}
+        />
+      </svg>
+
+      {gekozen && (
+        <motion.div
+          className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full flex items-center justify-center"
+          style={{ backgroundColor: accent }}
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', stiffness: 400 }}
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </motion.div>
+      )}
+    </motion.button>
   );
 }
