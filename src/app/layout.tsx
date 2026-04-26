@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Nunito } from 'next/font/google';
 import AudioOntgrendelaar from '@/components/audio/AudioOntgrendelaar';
+import AudioToggle from '@/components/AudioToggle';
 import RotatieOverlay from '@/components/RotatieOverlay';
 import ServiceWorkerRegister from '@/components/ServiceWorkerRegister';
 import './globals.css';
@@ -58,6 +59,7 @@ export default function RootLayout({
     <html lang="nl" className={`${nunito.variable} h-full`}>
       <body className="h-full font-kind bg-warm-bg text-[#4A3728] overflow-hidden">
         <AudioOntgrendelaar>{children}</AudioOntgrendelaar>
+        <AudioToggle />
         <RotatieOverlay />
         <ServiceWorkerRegister />
       </body>

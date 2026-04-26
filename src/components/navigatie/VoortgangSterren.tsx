@@ -11,7 +11,9 @@ const GROOTTE_MAP = {
   lg: { w: 28, h: 28 },
 };
 
-const KLEUREN = ['#CD7F32', '#C0C0C0', '#FFD700']; // brons, zilver, goud
+// Brons, zilver/staal, goud — gekalibreerd voor zichtbaarheid op warme cream-achtergrond.
+// Zie ItemGrid.tsx voor toelichting.
+const KLEUREN = ['#B45309', '#64748B', '#EAB308'];
 
 function SterSvg({ gevuld, kleur, grootte }: { gevuld: boolean; kleur: string; grootte: { w: number; h: number } }) {
   return (

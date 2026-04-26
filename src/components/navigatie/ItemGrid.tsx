@@ -3,8 +3,12 @@
 import { motion } from 'framer-motion';
 import type { ItemDef } from '@/types';
 
-// Ster-kleuren per positie: brons, zilver, goud
-const STER_KLEUREN = ['#CD7F32', '#C0C0C0', '#FFD700'];
+// Ster-kleuren per positie: brons, zilver/staal, goud.
+// Het oude #C0C0C0 zilver had te weinig contrast tegen de warme cream-achtergrond
+// (#FFF8F0) waardoor de tweede ster "leeg" leek na voltooiing van niveau 2.
+// We gebruiken nu Tailwind's slate-500 voor zilver en deeper bronze/gold voor
+// duidelijke verzadiging op alle drie de niveaus.
+const STER_KLEUREN = ['#B45309', '#64748B', '#EAB308'];
 const STER_LEEG_KLEUR = '#E2E8F0';
 
 /** SVG ster-icoon — gevuld of leeg afhankelijk van behaald niveau */

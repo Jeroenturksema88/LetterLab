@@ -25,6 +25,11 @@ export default function OefeningPagina({ categorie, itemId }: OefeningPaginaProp
   const router = useRouter();
   const config = haalCategorieConfig(categorie);
   const { markeerVoltooid, huidigNiveau, registreerPoging } = useVoortgangStore();
+  // Subscribe expliciet op `items` zodat dit component re-rendert wanneer markeerVoltooid
+  // de store wijzigt. Zonder deze subscription blijft `niveau` op de oude waarde
+  // hangen (Zustand's actions zijn stabiele referenties — useMemo zou hier dus
+  // nooit re-evalueren).
+  const voortgangItems = useVoortgangStore((s) => s.items);
   const { audioAan } = useInstellingenStore();
   const { naam, voegDiplomaToe, heeftDiploma } = useProfielStore();
   const { speelVoorItem } = useAudioSpeler(audioAan);
@@ -37,10 +42,12 @@ export default function OefeningPagina({ categorie, itemId }: OefeningPaginaProp
     [config.items, itemId]
   );
 
-  const niveau: Niveau = useMemo(
-    () => (item ? huidigNiveau(item.id) : 'overtrekken'),
-    [item, huidigNiveau]
-  );
+  // Niveau wordt elke render fresh berekend uit de store, want huidigNiveau is
+  // een stabiele actie-referentie (useMemo zou hier dus nooit re-evalueren).
+  // De `voortgangItems` subscription hierboven garandeert dat we re-renderen
+  // zodra markeerVoltooid de state wijzigt.
+  void voortgangItems; // expliciet markeren als gebruikt voor de subscription
+  const niveau: Niveau = item ? huidigNiveau(item.id) : 'overtrekken';
 
   const audioSpeelFn = useCallback(
     (type: string) => {
@@ -101,12 +108,21 @@ export default function OefeningPagina({ categorie, itemId }: OefeningPaginaProp
 
     registreerPoging(item.id);
 
+    // Bepaal waar we naartoe gaan op basis van de NIEUWE store-state.
     const volgendNiveau = huidigNiveau(item.id);
-    if (volgendNiveau === niveau && geslaagd) {
+
+    if (geslaagd && niveau === 'zelfstandig' && volgendNiveau === 'zelfstandig') {
+      // Alle drie niveaus voor dit item al voltooid (en geen nieuwe diploma).
+      // Terug naar het overzicht.
       router.push(config.routePrefix);
-    } else {
-      router.refresh();
+      return;
     }
+
+    // In alle andere gevallen blijven we op deze pagina staan. Dankzij de
+    // store-subscription hierboven re-rendert dit component automatisch wanneer
+    // de voortgang wijzigt; de `key` op OefeningView verderop garandeert dat
+    // OefeningView volledig schoon remount bij een niveau-wisseling
+    // (canvas leeg, streken-state gereset, juiste audio-instructie).
   };
 
   const handleDiplomaSluiten = () => {
@@ -116,15 +132,20 @@ export default function OefeningPagina({ categorie, itemId }: OefeningPaginaProp
 
     const volgendNiveau = huidigNiveau(item.id);
     if (volgendNiveau === niveau) {
+      // Alle 3 niveaus van dit item klaar — terug naar overzicht.
       router.push(config.routePrefix);
-    } else {
-      router.refresh();
     }
+    // Anders: blijf op de pagina; OefeningView remount via key-change.
   };
 
   return (
     <div className="h-full">
       <OefeningView
+        // Key bevat zowel itemId als niveau. Bij elke wisseling unmount React de
+        // oude OefeningView en mount een schone nieuwe — daardoor reset al de
+        // lokale state (streken, feedback-overlay, disabled, kleur/dikte) en
+        // start de useEffect die de nieuwe niveau-instructie afspeelt.
+        key={`${item.id}-${niveau}`}
         item={item}
         niveau={niveau}
         onVoltooid={handleVoltooid}
