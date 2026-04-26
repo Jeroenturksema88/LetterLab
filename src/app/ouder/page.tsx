@@ -26,6 +26,41 @@ export default function OuderDashboard() {
   const { items, aantalSterren, resetItem, resetAlles } = useVoortgangStore();
   const { naam, geslacht, profielIngesteld, reset: resetProfiel } = useProfielStore();
 
+  // Pincode-wijzigen state. Gebruikt drie 4-cijfer invoervelden: huidig,
+  // nieuw, bevestigen. Validatie loopt via de wijzig-handler.
+  const [pwHuidig, setPwHuidig] = useState('');
+  const [pwNieuw, setPwNieuw] = useState('');
+  const [pwBevestig, setPwBevestig] = useState('');
+  const [pwFout, setPwFout] = useState<null | 'huidig' | 'mismatch' | 'kort'>(null);
+  const [pwSucces, setPwSucces] = useState(false);
+
+  const wijzigPincode = () => {
+    setPwSucces(false);
+    if (pwHuidig !== pincode) {
+      setPwFout('huidig');
+      return;
+    }
+    if (pwNieuw.length !== 4) {
+      setPwFout('kort');
+      return;
+    }
+    if (pwNieuw !== pwBevestig) {
+      setPwFout('mismatch');
+      return;
+    }
+    updateInstellingen({ pincode: pwNieuw });
+    setPwHuidig('');
+    setPwNieuw('');
+    setPwBevestig('');
+    setPwFout(null);
+    setPwSucces(true);
+    // Verberg succes-melding na 3 seconden
+    setTimeout(() => setPwSucces(false), 3000);
+  };
+
+  const pwCompleet =
+    pwHuidig.length === 4 && pwNieuw.length === 4 && pwBevestig.length === 4;
+
   const handlePinInvoer = (cijfer: string) => {
     const nieuwePinInvoer = pinInvoer + cijfer;
     setPinInvoer(nieuwePinInvoer);
@@ -278,6 +313,68 @@ export default function OuderDashboard() {
           )}
         </section>
 
+        {/* Pincode wijzigen — toegankelijk wanneer ouder is ingelogd */}
+        <section className="bg-white rounded-kind p-6 shadow-md">
+          <h3 className="text-lg font-bold mb-4">Pincode wijzigen</h3>
+          <div className="space-y-4">
+            <PincodeVeld
+              label="Huidige pincode"
+              waarde={pwHuidig}
+              setWaarde={(v) => {
+                setPwHuidig(v);
+                setPwFout(null);
+                setPwSucces(false);
+              }}
+              foutief={pwFout === 'huidig'}
+            />
+            <PincodeVeld
+              label="Nieuwe pincode (4 cijfers)"
+              waarde={pwNieuw}
+              setWaarde={(v) => {
+                setPwNieuw(v);
+                setPwFout(null);
+                setPwSucces(false);
+              }}
+              foutief={pwFout === 'mismatch' || pwFout === 'kort'}
+            />
+            <PincodeVeld
+              label="Bevestig nieuwe pincode"
+              waarde={pwBevestig}
+              setWaarde={(v) => {
+                setPwBevestig(v);
+                setPwFout(null);
+                setPwSucces(false);
+              }}
+              foutief={pwFout === 'mismatch'}
+            />
+
+            {pwFout && (
+              <div className="text-sm text-red-600 font-medium">
+                {pwFout === 'huidig' && 'Huidige pincode is onjuist'}
+                {pwFout === 'kort' && 'Nieuwe pincode moet 4 cijfers zijn'}
+                {pwFout === 'mismatch' && 'Nieuwe pincodes komen niet overeen'}
+              </div>
+            )}
+            {pwSucces && (
+              <div className="text-sm text-green-600 font-medium">
+                ✓ Pincode is gewijzigd
+              </div>
+            )}
+
+            <button
+              onClick={wijzigPincode}
+              disabled={!pwCompleet}
+              className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                pwCompleet
+                  ? 'bg-letter-kleur text-white hover:opacity-90'
+                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              }`}
+            >
+              Wijzigen
+            </button>
+          </div>
+        </section>
+
         {/* Reset */}
         <section className="bg-white rounded-kind p-6 shadow-md">
           <h3 className="text-lg font-bold mb-4">Reset</h3>
@@ -306,6 +403,42 @@ export default function OuderDashboard() {
           </div>
         </section>
       </div>
+    </div>
+  );
+}
+
+// Compact 4-cijfer pincode-invoerveld met masked-display, only-digits-filter
+// en visuele fout-indicatie. autoComplete="new-password" voorkomt dat browsers
+// hier pincodes uit andere sites invullen.
+function PincodeVeld({
+  label,
+  waarde,
+  setWaarde,
+  foutief,
+}: {
+  label: string;
+  waarde: string;
+  setWaarde: (v: string) => void;
+  foutief?: boolean;
+}) {
+  return (
+    <div className="flex items-center justify-between">
+      <label className="text-sm text-gray-600">{label}</label>
+      <input
+        type="password"
+        inputMode="numeric"
+        pattern="[0-9]*"
+        maxLength={4}
+        value={waarde}
+        onChange={(e) => setWaarde(e.target.value.replace(/\D/g, '').slice(0, 4))}
+        placeholder="● ● ● ●"
+        autoComplete="new-password"
+        className={`w-32 text-center text-xl font-bold tracking-widest rounded-lg px-3 py-2 border-2 transition-colors ${
+          foutief
+            ? 'border-red-400 bg-red-50 text-red-700'
+            : 'border-gray-200 bg-white focus:border-letter-kleur'
+        } focus:outline-none`}
+      />
     </div>
   );
 }

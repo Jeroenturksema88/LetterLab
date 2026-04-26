@@ -270,6 +270,12 @@ export default function ProfielPagina() {
 }
 
 // Compacte hand-knop met palm-naar-jou silhouet. Spiegelbeeld voor links/rechts.
+//
+// SVG is van nature een RECHTERhand vanuit de viewer-perspectief: duim aan de
+// linkerkant van het viewbox (een kind dat zijn rechterhand opheft met palm
+// naar mij toe heeft zijn duim aan MIJN linkerkant). Voor de linkerhand
+// spiegelen we via `scaleX(-1)`. (Eerdere versie had dit per ongeluk
+// omgedraaid — zie [[Tracklog]] 2026-04-26 IV.)
 function HandKnop({
   hand,
   gekozen,
@@ -280,16 +286,22 @@ function HandKnop({
   onClick: () => void;
 }) {
   const accent = hand === 'links' ? '#7C3AED' : '#059669';
+  const accentDonker = hand === 'links' ? '#5B21B6' : '#047857';
   const accentLicht = hand === 'links' ? '#DDD6FE' : '#A7F3D0';
   const accentZacht = hand === 'links' ? '#F5F3FF' : '#ECFDF5';
+  const inactiefKleur = '#CBD5E1';
+  const inactiefDonker = '#94A3B8';
+
+  const handKleur = gekozen ? accent : inactiefKleur;
+  const cuffKleur = gekozen ? accentDonker : inactiefDonker;
 
   return (
     <motion.button
       onClick={onClick}
       className="relative flex items-center justify-center rounded-[1.5rem] cursor-pointer outline-none focus:outline-none"
       style={{
-        width: 110,
-        height: 110,
+        width: 124,
+        height: 124,
         background: gekozen
           ? `linear-gradient(135deg, ${accentLicht} 0%, ${accentLicht}CC 100%)`
           : `linear-gradient(135deg, ${accentZacht} 0%, #FFFFFF 100%)`,
@@ -305,33 +317,93 @@ function HandKnop({
       aria-label={hand === 'links' ? 'Linkshandig' : 'Rechtshandig'}
       aria-pressed={gekozen}
     >
-      {/* Hand-silhouet: vier vingers omhoog + duim opzij. Voor links: duim rechts.
-          Voor rechts: duim links. Spiegelen via scaleX(-1). */}
+      {/* Hand-silhouet — vriendelijke, organische vorm met getapeerde vingers,
+          gefande spreiding en uitstekende duim. Voor de linkerhand spiegelen
+          via scaleX(-1). Subtiele palm-glans + cuff-band voor diepte. */}
       <svg
-        width="62"
-        height="68"
-        viewBox="0 0 60 68"
+        width="84"
+        height="100"
+        viewBox="0 0 120 150"
         fill="none"
-        style={{ transform: hand === 'rechts' ? 'scaleX(-1)' : undefined }}
+        style={{ transform: hand === 'links' ? 'scaleX(-1)' : undefined }}
       >
-        {/* Palm */}
+        {/* Mouw-cuff onderaan voor visuele grondaarding */}
+        <rect x="42" y="128" width="44" height="14" rx="7" fill={cuffKleur} />
+
+        {/* Duim — uitstekend naar links-onder, gebogen vorm */}
         <path
-          d="M14 30 L14 56 Q14 64 22 64 L42 64 Q50 64 50 56 L50 30 Q50 24 44 24 L20 24 Q14 24 14 30 Z"
-          fill={gekozen ? accent : '#94A3B8'}
+          d="M 34 88
+             C 24 84, 10 90, 8 102
+             C 6 114, 18 120, 26 114
+             C 34 108, 38 98, 36 88
+             Z"
+          fill={handKleur}
         />
-        {/* Vinger 1 (pink) */}
-        <rect x="16" y="14" width="7" height="14" rx="3.5" fill={gekozen ? accent : '#94A3B8'} />
-        {/* Vinger 2 (ring) */}
-        <rect x="24" y="8" width="7" height="20" rx="3.5" fill={gekozen ? accent : '#94A3B8'} />
-        {/* Vinger 3 (middel) */}
-        <rect x="32" y="4" width="7" height="24" rx="3.5" fill={gekozen ? accent : '#94A3B8'} />
-        {/* Vinger 4 (wijs) */}
-        <rect x="40" y="10" width="7" height="18" rx="3.5" fill={gekozen ? accent : '#94A3B8'} />
-        {/* Duim — opzij gestoken */}
+
+        {/* Palm — afgeronde, licht-bolstaande vorm, breder in midden */}
         <path
-          d="M14 38 L6 44 Q2 47 4 52 Q6 56 11 54 L14 50 Z"
-          fill={gekozen ? accent : '#94A3B8'}
+          d="M 32 78
+             C 28 84, 28 105, 32 118
+             C 36 126, 44 130, 52 130
+             L 76 130
+             C 84 130, 92 126, 96 118
+             C 100 105, 100 84, 96 78
+             Z"
+          fill={handKleur}
         />
+
+        {/* Wijsvinger — middellange, naast duim */}
+        <path
+          d="M 36 78
+             C 33 56, 33 30, 38 22
+             Q 44 14, 50 22
+             C 53 30, 53 56, 50 78
+             Z"
+          fill={handKleur}
+        />
+
+        {/* Middelvinger — langste, in het midden */}
+        <path
+          d="M 52 78
+             C 49 50, 49 18, 54 10
+             Q 60 2, 66 10
+             C 69 18, 69 50, 66 78
+             Z"
+          fill={handKleur}
+        />
+
+        {/* Ringvinger — iets korter dan middel */}
+        <path
+          d="M 68 78
+             C 65 55, 65 25, 70 17
+             Q 76 9, 82 17
+             C 85 25, 85 55, 82 78
+             Z"
+          fill={handKleur}
+        />
+
+        {/* Pink — kortste, helemaal rechts */}
+        <path
+          d="M 84 78
+             C 81 62, 81 40, 86 32
+             Q 92 24, 98 32
+             C 101 40, 101 62, 98 78
+             Z"
+          fill={handKleur}
+        />
+
+        {/* Subtiele palm-lijn voor diepte (lichte handlijn) */}
+        <path
+          d="M 42 100 Q 64 106, 86 100"
+          stroke="white"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          opacity="0.35"
+          fill="none"
+        />
+
+        {/* Zachte glans op palm voor diepte */}
+        <ellipse cx="60" cy="103" rx="16" ry="11" fill="white" opacity="0.18" />
       </svg>
 
       {gekozen && (
