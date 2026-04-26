@@ -347,10 +347,16 @@ export default function OefeningView({
           </motion.button>
           <motion.button
             onClick={handleWis}
-            className="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center"
+            className="w-12 h-12 rounded-full shadow-md flex items-center justify-center"
             whileTap={{ scale: 0.9 }}
             disabled={disabled || streken.length === 0}
-            style={{ opacity: streken.length === 0 ? 0.3 : 1 }}
+            // Wis-knop heeft een zacht roze/oranje achtergrond zodat een 3,5-jarige
+            // hem nooit verwart met de groene "klaar"-knop. Visueel verschil belangrijk:
+            // klaar = vrolijk groen, wis = "let op, dit haalt alles weg" oranje-roze.
+            style={{
+              opacity: streken.length === 0 ? 0.3 : 1,
+              background: streken.length === 0 ? '#FFFFFF' : 'linear-gradient(135deg, #FFEDD5 0%, #FED7AA 100%)',
+            }}
             aria-label="Alles wissen"
           >
             <WisIcoon />
@@ -360,18 +366,34 @@ export default function OefeningView({
 
       {/* Canvas-gebied — neemt alle beschikbare hoogte in */}
       <div className="flex-1 flex items-center justify-center gap-4 px-4 pb-4">
-        {/* Voorbeeld-canvas voor naschrijven (links, kleiner) */}
+        {/* Voorbeeld-canvas voor naschrijven (links, kleiner).
+            Heeft een "kijk-icoon" (oog) bovenin zodat het kind zonder tekst snapt
+            dat dit voorbeeld is om naar te kijken, niet om op te tekenen. Subtiele
+            sluier en geen pointer-events maken visueel duidelijk dat tekenen hier
+            niets doet. */}
         {isNaschrijven && (
           <div
             className="relative bg-white rounded-kind shadow-lg overflow-hidden flex-shrink-0"
             style={{ width: voorbeeldBreedte, height: canvasHoogte }}
           >
-            <TemplateCanvas
-              item={item}
-              niveau="naschrijven"
-              breedte={voorbeeldBreedte}
-              hoogte={canvasHoogte}
-            />
+            {/* Oog-icoon rechtsboven — universeel "kijk hier"-symbool */}
+            <div
+              className="absolute top-2 right-2 z-30 w-8 h-8 rounded-full bg-white/80 shadow-sm flex items-center justify-center pointer-events-none"
+              aria-hidden="true"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={item.kleur} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </div>
+            <div className="absolute inset-0 pointer-events-none">
+              <TemplateCanvas
+                item={item}
+                niveau="naschrijven"
+                breedte={voorbeeldBreedte}
+                hoogte={canvasHoogte}
+              />
+            </div>
           </div>
         )}
 

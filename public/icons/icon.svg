@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="LetterLab">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFF8F0"/>
+      <stop offset="55%" stop-color="#FFF0E0"/>
+      <stop offset="100%" stop-color="#FFE2C8"/>
+    </linearGradient>
+    <linearGradient id="L1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#818CF8"/>
+      <stop offset="100%" stop-color="#4F46E5"/>
+    </linearGradient>
+    <linearGradient id="L2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Achtergrond — afgeronde "tegel" met warme gradient -->
+  <rect x="40" y="40" width="944" height="944" rx="220" ry="220" fill="url(#bg)"/>
+  <rect x="40" y="40" width="944" height="944" rx="220" ry="220" fill="url(#glow)"/>
+
+  <!-- Decoratieve cirkel achter de letters — speels accent -->
+  <circle cx="512" cy="540" r="260" fill="#A5B4FC" fill-opacity="0.10"/>
+
+  <!-- Grote letter "L" — kindvriendelijk ronde uiteinden -->
+  <path d="M 280 240 L 280 700 Q 280 760 340 760 L 560 760"
+        fill="none" stroke="url(#L1)" stroke-width="120"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Tweede letter "l" — speels gekanteld in tweede kleur -->
+  <path d="M 700 220 L 700 760"
+        fill="none" stroke="url(#L2)" stroke-width="120"
+        stroke-linecap="round" transform="rotate(8 700 490)"/>
+
+  <!-- Begeleidingsster bij start van de eerste L (zoals in de app) -->
+  <g transform="translate(280 240)">
+    <circle r="56" fill="#22C55E"/>
+    <path d="M 0 -28 L 8 -8 L 30 -4 L 14 8 L 18 30 L 0 18 L -18 30 L -14 8 L -30 -4 L -8 -8 Z"
+          fill="#FFFFFF"/>
+  </g>
+
+  <!-- Kleine sparkle rechtsboven -->
+  <g transform="translate(800 260)" opacity="0.85">
+    <path d="M 0 -36 L 10 -10 L 36 0 L 10 10 L 0 36 L -10 10 L -36 0 L -10 -10 Z"
+          fill="#F59E0B"/>
+  </g>
+</svg>

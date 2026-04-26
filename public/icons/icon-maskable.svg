@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="LetterLab">
+  <!-- Maskable variant: vol bezet (geen ronde rand), volledige kleur tot aan de randen.
+       Belangrijke inhoud zit binnen de "safe zone" (centrale 80%). -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFF8F0"/>
+      <stop offset="100%" stop-color="#FFE2C8"/>
+    </linearGradient>
+    <linearGradient id="L1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#818CF8"/>
+      <stop offset="100%" stop-color="#4F46E5"/>
+    </linearGradient>
+    <linearGradient id="L2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="1024" height="1024" fill="url(#bg)"/>
+  <circle cx="512" cy="540" r="240" fill="#A5B4FC" fill-opacity="0.12"/>
+  <path d="M 320 300 L 320 690 Q 320 740 370 740 L 560 740"
+        fill="none" stroke="url(#L1)" stroke-width="110"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 690 280 L 690 740"
+        fill="none" stroke="url(#L2)" stroke-width="110"
+        stroke-linecap="round" transform="rotate(8 690 510)"/>
+</svg>

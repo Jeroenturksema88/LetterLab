@@ -138,8 +138,8 @@ export function tekenLijnOpGrid(
   const y1 = Math.round(naar.y * (grootte - 1));
 
   // Bresenham's lijn-algoritme
-  let dx = Math.abs(x1 - x0);
-  let dy = -Math.abs(y1 - y0);
+  const dx = Math.abs(x1 - x0);
+  const dy = -Math.abs(y1 - y0);
   const sx = x0 < x1 ? 1 : -1;
   const sy = y0 < y1 ? 1 : -1;
   let fout = dx + dy;

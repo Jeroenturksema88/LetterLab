@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LetterLab
 
-## Getting Started
+Interactieve iPad-leer-app waarmee kinderen van 3–6 jaar **letters, cijfers en vormen** leren schrijven via overtrekken, naschrijven en zelfstandig schrijven, ondersteund door Nederlandse audio-instructie.
 
-First, run the development server:
+> Web-app, geen App Store. Open de URL in iPad Safari, voeg toe aan beginscherm en je hebt een fullscreen leeromgeving met Apple Pencil-ondersteuning.
+
+## Live
+
+- **Productie**: https://letterlab-nu.vercel.app
+- **Repo**: https://github.com/Jeroenturksema88/LetterLab
+- **Vercel project**: `letterlab` (team `jeroen-turksemas-projects`)
+
+## Snel starten
 
 ```bash
+nvm use 22
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# open http://localhost:3000 in iPad Safari of Chrome DevTools (iPad simulatie)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech-stack (samenvatting)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Onderdeel | Keuze | Waarom |
+|---|---|---|
+| Framework | Next.js 14 App Router | SSG-snel, geen backend nodig, native op Vercel |
+| Tekenen | HTML5 Canvas + `perfect-freehand` + PointerEvents | Vloeiende drukgevoelige lijnen voor Apple Pencil én vinger |
+| Audio | Web Speech API (nl-NL) met fallback naar pre-recorded `.mp3` | Geen kosten in MVP, productie-upgrade naar opnames mogelijk |
+| State | Zustand met `persist` (localStorage) | Geen account, geen server, geen privacy-issues |
+| Animaties | Framer Motion | Declaratief, springs, gestures |
+| Styling | Tailwind CSS 3 | Snel itereren op design tokens |
+| PWA | Manifest + custom service worker (`public/sw.js`) | Add-to-Homescreen, offline first |
+| Hosting | Vercel | Auto-deploy uit `main`, edge cache |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Volledige architectuur: zie `docs/PRD.md` en `claude/Projects/letterlab/Architecture.md` in het Obsidian-vault.
 
-## Learn More
+## Belangrijke commando's
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run dev        # development server
+npm run build      # productie build (lokaal verifiëren)
+npm run lint       # ESLint + next-vitals
+npm run typecheck  # TypeScript zonder bouwen
+npm run icons      # regenereer PWA-iconen (vereist librsvg: brew install librsvg)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploy
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Commit met git-author `jeroenturksema@live.nl` (Vercel-Hobby blokkeert andere authors).
+2. Push naar `main` op GitHub. Vercel deploy't automatisch.
+3. Controleer: Vercel Dashboard → Project Settings → **Deployment Protection** moet UIT staan, anders krijgt het publiek 401.
 
-## Deploy on Vercel
+## Repo-conventies
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Taal**: Nederlands. UI, audio-scripts, comments, commit messages.
+- **Naamgeving**: kebab-case voor bestanden, PascalCase voor componenten, Nederlands voor domein-termen, Engels voor pure tech-termen.
+- **Geen tekst in kind-UI**. Iconen, kleuren en audio dragen de UX.
+- **Forgiving evaluatie**: drempels staan in `stores/instellingen-store.ts` en kunnen in het ouder-dashboard worden bijgesteld.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Documentatie
+
+- `docs/PRD.md` — volledig product-requirements-document
+- `CLAUDE.md` — instructies voor Claude Code (project-context)
+- Obsidian: `claude/Projects/letterlab/` — long-term knowledge base (README, Architecture, Tracklog, Known Issues)

@@ -1,134 +1,156 @@
-# LetterLab — Interactieve leer-app voor Nore
+# LetterLab — Interactieve leer-app voor Nore (en alle andere kinderen)
 
 ## Projectoverzicht
 
-LetterLab is een iPad-geoptimaliseerde web-app waarmee Nore (3,5 jaar) letters, cijfers en vormen leert schrijven. De app combineert overtrekken, naschrijven en zelfstandig schrijven met Nederlandse audio-instructie.
+LetterLab is een iPad-geoptimaliseerde web-app waarmee Nore (3,5 jaar) en andere kinderen tot ca. 6 jaar **letters, cijfers en vormen** leren schrijven. Drie progressieniveaus per item (overtrekken → naschrijven → zelfstandig) met Nederlandse audio-instructie en directe positieve feedback.
 
-**Taal van de app: Nederlands.** Alle UI-teksten, audio-scripts, comments in code, en commit messages zijn in het Nederlands.
+**Taal van de app: Nederlands.** UI-teksten (waar relevant), audio-scripts, comments in code, commit messages — alles in het Nederlands.
 
 ## Tech Stack
 
 | Component | Technologie |
 |-----------|-------------|
-| Framework | Next.js 14+ (App Router, TypeScript) |
+| Framework | Next.js 14 (App Router, TypeScript) |
 | Canvas | HTML5 Canvas + `perfect-freehand` |
-| Audio | Web Speech API (MVP) → pre-recorded .mp3 (productie) |
-| State | Zustand + localStorage |
+| Audio | Web Speech API (nl-NL) met fallback naar pre-recorded `.mp3` |
+| State | Zustand `persist` met localStorage |
 | Animaties | Framer Motion |
-| Styling | Tailwind CSS |
-| Hosting | Vercel |
-| PWA | next-pwa |
+| Styling | Tailwind CSS 3 |
+| PWA | Custom service worker (`public/sw.js`) — offline first, immutable cache voor audio/icons |
+| Hosting | Vercel — auto-deploy uit `main` |
 
 ## Kernregels
 
 ### Doelgroep = 3,5 jaar oud kind
-- **Geen tekst** in de kind-UI. Alle navigatie via iconen en kleuren.
-- **Alle instructie is auditief.** De stem spreekt Nederlands.
+- **Geen tekst** in de kind-UI. Alle navigatie via iconen, kleuren en audio.
+- **Alle instructie is auditief.** Nederlandse stem, vriendelijk, langzaam.
 - **Alleen positieve feedback.** Nooit "fout". Altijd "probeer nog eens" met aanmoediging.
-- **Touch targets minimaal 44x44pt.** Liefst groter.
-- **Geen complexe gebaren.** Alleen tap, drag, draw. Geen pinch, double-tap, multi-touch.
+- **Touch targets minimaal 44x44pt.** Liefst groter (alle knoppen zijn 48–56px).
+- **Geen complexe gebaren.** Alleen tap, drag, draw. Geen pinch, double-tap of multi-touch.
+- **Wis-knop oranje, klaar-knop groen.** Visueel onderscheidend zodat het kind ze niet verwart.
 
 ### Canvas & tekenen
-- Gebruik **PointerEvents** (niet TouchEvents) voor Apple Pencil + vinger support.
+- **PointerEvents** (niet TouchEvents) voor Apple Pencil + vinger-support in één API.
 - Twee gestapelde canvas-lagen: template (statisch) + tekenlaag (interactief).
-- Gebruik `perfect-freehand` voor drukgevoelige, vloeiende lijnen.
-- Palm rejection wordt door iPadOS afgehandeld.
+- `perfect-freehand` voor drukgevoelige, vloeiende lijnen.
+- Palm rejection: door iPadOS afgehandeld zodra Apple Pencil gepaird is.
 
 ### Drie niveaus per item
-1. **Overtrekken (Tracing)** — Gestippeld pad met startpunt-animatie. Tolerantie: 70% pad bedekt = geslaagd.
-2. **Naschrijven (Side-by-Side)** — Voorbeeld links, leeg canvas rechts. Tolerantie: 50% similarity = geslaagd.
-3. **Zelf schrijven (Freehand)** — Alleen audio-prompt, geen visueel voorbeeld. Tolerantie: 40% similarity = geslaagd.
+1. **Overtrekken** — Gestippeld pad + startpunt-puls + brede tolerantie-zone.
+2. **Naschrijven** — Voorbeeld links (met "kijk-icoon"), leeg canvas rechts.
+3. **Zelf schrijven** — Alleen audio-prompt, geen visueel voorbeeld.
+
+Drempels staan in `src/stores/instellingen-store.ts` en zijn ouder-instelbaar:
+- Overtrekken: 60% pad-bedekking
+- Naschrijven: 35% similarity
+- Zelfstandig: 30% similarity
 
 ### Audio
-- Elk item heeft 7 audio-snippets (zie `data/audio-scripts.json`).
-- MVP: Web Speech API met `lang: 'nl-NL'`.
-- Productie: pre-recorded .mp3 bestanden in `/public/audio/`.
+- Per item 7 snippets (`intro`, `niveau1_instructie` t/m `voltooiing`) in `src/data/audio-scripts.json`.
+- MVP: Web Speech API (nl-NL stem op iPad Safari is "Ellen").
+- Productie-upgrade: pre-recorded `.mp3`'s in `/public/audio/<categorie>/<itemId>/<type>.mp3`.
+- Token-systeem in `useAudioSpeler` zorgt dat overlappende calls oudere afspeel-acties netjes afkappen.
 
-### Evaluatie
-- **Geen ML/OCR.** Gebruik geometrische stroke-matching (proximity, richting, proportie).
-- Configureerbare drempels per niveau.
-- Begin altijd soepel — liever te makkelijk dan te moeilijk.
+### PWA / offline
+- Manifest (`public/manifest.json`) verwijst naar SVG + PNG iconen (any + maskable).
+- Service worker (`public/sw.js`) cached shell + statische assets + audio (cache-first voor immutable assets, network-first voor HTML).
+- Service worker wordt alleen in productie geregistreerd (`ServiceWorkerRegister.tsx`).
 
-## Projectstructuur
+## Projectstructuur (actueel)
 
 ```
 src/
 ├── app/
-│   ├── page.tsx                    # Startscherm (3 categorie-knoppen)
-│   ├── letters/
-│   │   ├── page.tsx                # Letter-grid overzicht
-│   │   └── [letter]/page.tsx       # Oefening per letter
-│   ├── cijfers/
-│   │   ├── page.tsx                # Cijfer-grid overzicht
-│   │   └── [cijfer]/page.tsx       # Oefening per cijfer
-│   ├── vormen/
-│   │   ├── page.tsx                # Vormen-grid overzicht
-│   │   └── [vorm]/page.tsx         # Oefening per vorm
-│   └── ouder/page.tsx              # Ouder-dashboard (pincode)
+│   ├── layout.tsx                  # Root layout met fonts, audio-ontgrendeling, rotatie-overlay, SW
+│   ├── page.tsx                    # Startscherm (3 categorie-knoppen) + profiel-gate
+│   ├── letters/page.tsx            # Thin wrapper → CategorieOverzichtPagina
+│   ├── letters/[letter]/page.tsx   # Thin wrapper → OefeningPagina
+│   ├── cijfers/page.tsx            # idem
+│   ├── cijfers/[cijfer]/page.tsx   # idem
+│   ├── vormen/page.tsx             # idem
+│   ├── vormen/[vorm]/page.tsx      # idem
+│   ├── ouder/page.tsx              # Ouder-dashboard (pincode-beveiligd)
+│   └── profiel/page.tsx            # Profiel-instelling (geslacht verplicht, naam optioneel)
 ├── components/
+│   ├── pages/
+│   │   ├── CategorieOverzichtPagina.tsx  # Gedeelde overzichtspagina
+│   │   └── OefeningPagina.tsx            # Gedeelde oefenpagina (audio + diploma's)
 │   ├── canvas/
-│   │   ├── TekenCanvas.tsx         # Hoofdcomponent voor tekenen
-│   │   ├── TemplateCanvas.tsx      # Template/voorbeeld laag
-│   │   └── StrokePad.tsx           # Geanimeerd schrijfpad (niveau 1)
+│   │   ├── OefeningView.tsx        # Hoofdcomponent voor een oefening
+│   │   ├── TekenCanvas.tsx         # Interactieve tekenlaag
+│   │   ├── TemplateCanvas.tsx      # Statische template/voorbeeld-laag
+│   │   └── StrokePad.tsx           # Pulserend startpunt voor overtrekken
 │   ├── navigatie/
-│   │   ├── CategorieKnop.tsx       # Grote startscherm-knop
-│   │   ├── ItemGrid.tsx            # Grid van letters/cijfers/vormen
-│   │   └── VoortgangSterren.tsx    # Sterren-indicator per item
+│   │   ├── CategorieKnop.tsx       # Grote startscherm-knop met SVG-iconen
+│   │   ├── ItemGrid.tsx            # Grid van letters/cijfers/vormen + sterren
+│   │   ├── TerugKnop.tsx           # Universele terug-knop
+│   │   └── VoortgangSterren.tsx    # 3 sterren-indicator
 │   ├── feedback/
-│   │   ├── BeloningAnimatie.tsx     # Sterren, confetti, sparkle
-│   │   ├── VoltooiingScherm.tsx     # Scherm na voltooiing
-│   │   └── AanmoedigingScherm.tsx   # "Probeer nog eens" scherm
-│   └── audio/
-│       └── AudioSpeler.tsx         # Audio-afspeelcomponent
+│   │   ├── BeloningAnimatie.tsx    # Sparkle / ster / confetti per niveau
+│   │   ├── DiplomaOverlay.tsx      # Item- en categorie-diploma's
+│   │   └── FeedbackOverlay.tsx     # Succes / aanmoediging schermen
+│   ├── audio/
+│   │   ├── AudioOntgrendelaar.tsx  # iOS Safari first-tap audio unlock
+│   │   └── AudioSpeler.tsx         # useAudioSpeler hook (cancellable, mp3 + TTS)
+│   ├── RotatieOverlay.tsx          # Toont prompt bij portrait
+│   └── ServiceWorkerRegister.tsx   # Registreert sw.js in productie
 ├── hooks/
-│   ├── useTekenCanvas.ts           # Canvas drawing logic
-│   ├── useAudio.ts                 # Audio afspelen (TTS of mp3)
-│   ├── useVoortgang.ts             # Progress tracking
-│   └── useEvaluatie.ts             # Stroke-matching evaluatie
+│   └── useVoortgang.ts             # Convenience-wrapper rond voortgang-store
 ├── lib/
-│   ├── stroke-matching.ts          # Geometrische vergelijkingsalgoritmes
-│   ├── pad-normalisatie.ts         # SVG path → punten conversie
-│   └── scoring.ts                  # Similarity scoring
+│   ├── categorie-registry.ts       # Centrale lookup categorie → data + kleuren
+│   ├── stroke-matching.ts          # evalueerOvertrekking + evalueerSimilarity
+│   ├── pad-normalisatie.ts         # SVG → punten + bbox-normalisatie
+│   └── scoring.ts                  # IoU rasterisatie + proportie/richting
 ├── stores/
-│   ├── voortgang-store.ts          # Zustand store voor progress
-│   └── instellingen-store.ts       # Zustand store voor settings
+│   ├── voortgang-store.ts          # Voortgang per item (3 niveaus, sterren)
+│   ├── instellingen-store.ts       # Audio aan/uit, drempels, pincode, sessieLimiet
+│   └── profiel-store.ts            # Naam, geslacht, behaalde diploma's
 ├── data/
-│   ├── letters.json                # Letter-definities met paden
-│   ├── cijfers.json                # Cijfer-definities met paden
-│   ├── vormen.json                 # Vorm-definities met paden
-│   └── audio-scripts.json          # Nederlandse audio-teksten
+│   ├── letters.json                # 26 letters (a-z, lowercase id, label uppercase)
+│   ├── cijfers.json                # 11 cijfers (0-10)
+│   ├── vormen.json                 # 12 basisvormen
+│   └── audio-scripts.json          # NL audio-teksten per item + generieke prompts
 └── types/
-    └── index.ts                    # TypeScript type-definities
+    └── index.ts                    # Centrale type-definities
 public/
-├── audio/                          # Pre-recorded audiobestanden
-├── sounds/                         # UI-geluidseffecten
-└── icons/                          # App-iconen voor PWA
+├── audio/                          # Pre-recorded audiobestanden (optioneel; TTS-fallback)
+├── icons/                          # PWA-iconen (SVG masters + gegenereerde PNGs)
+├── manifest.json                   # PWA-manifest
+└── sw.js                           # Service worker
+scripts/
+└── maak-pwa-icons.sh               # Regenereert PNGs vanuit SVG masters (vereist librsvg)
+.github/
+└── workflows/ci.yml                # CI: typecheck + lint + build op PR/push
 ```
 
 ## Conventies
 
-- **Bestandsnamen:** Nederlands, kebab-case voor bestanden, PascalCase voor componenten
-- **Variabelen/functies:** Nederlands waar het UI/domein betreft (`voortgang`, `niveau`, `evaluatie`), Engels voor technische termen (`stroke`, `canvas`, `render`)
-- **Comments:** Nederlands
-- **Commit messages:** Nederlands, imperatief ("Voeg letter-grid toe", "Fix audio timing")
-- **Types:** Nederlands (`type Niveau = 'overtrekken' | 'naschrijven' | 'zelfstandig'`)
-
-## Referentie-documenten
-
-- `docs/PRD.md` — Volledig Product Requirements Document
-- `data/audio-scripts.json` — Alle Nederlandse audio-teksten per item
-- `data/letters.json` — Letter-definities (SVG-paden, streken, metadata)
-- `.claude/skills/` — Gedetailleerde technische skills per subsysteem
+- **Bestandsnamen**: Nederlands, kebab-case voor bestanden, PascalCase voor React-componenten.
+- **Variabelen/functies**: Nederlands voor UI/domein (`voortgang`, `niveau`, `evaluatie`), Engels voor pure tech-termen (`stroke`, `canvas`, `render`, `ref`).
+- **Comments**: Nederlands. Een korte regel die uitlegt **waarom** iets zo is, niet **wat**.
+- **Commit messages**: Nederlands, imperatief ("Voeg letter-grid toe", "Fix audio timing").
+- **Types**: Nederlands (`type Niveau = 'overtrekken' | 'naschrijven' | 'zelfstandig'`).
 
 ## Snel starten
 
 ```bash
-# Project opzetten
-npx create-next-app@latest letterlab --typescript --tailwind --app --src-dir
-cd letterlab
-npm install perfect-freehand framer-motion zustand next-pwa
-
-# Development
-npm run dev
-# Open in iPad Safari of Chrome DevTools (iPad simulatie)
+nvm use 22
+npm install
+npm run dev          # development
+npm run build        # productie-build (lokaal verifiëren)
+npm run lint         # ESLint
+npm run typecheck    # tsc --noEmit
+npm run icons        # regenereer PWA-iconen (vereist `brew install librsvg`)
 ```
+
+## Deploy
+
+1. **Git author moet `jeroenturksema@live.nl` zijn** — Vercel Hobby blokkeert andere authors silent.
+2. Push naar `main` → Vercel auto-deploy't.
+3. **Check Deployment Protection**: Vercel Dashboard → Project → Settings → Deployment Protection moet UIT staan, anders krijgt het publiek HTTP 401.
+
+## Referentie-documenten
+
+- `docs/PRD.md` — volledig Product Requirements Document
+- `README.md` — quick reference voor nieuwe contributors
+- Obsidian: `claude/Projects/letterlab/` — long-term knowledge base (README, Architecture, Tracklog, Known Issues)

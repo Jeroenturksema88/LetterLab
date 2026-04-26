@@ -14,9 +14,13 @@ export default function ProfielPagina() {
   const [invoerNaam, setInvoerNaam] = useState(naam || '');
 
   const handleBevestig = () => {
-    if (!invoerNaam.trim() || !gekozenGeslacht) return;
+    if (!gekozenGeslacht) return;
 
-    setNaam(invoerNaam.trim());
+    // Naam is optioneel: als leeg gelaten, gebruik vriendelijke fallback.
+    // Een 3,5-jarige kan zelf geen naam typen; ouder moet kunnen doorklikken.
+    const naamOmTeOpslaan = invoerNaam.trim() || 'Vriendje';
+
+    setNaam(naamOmTeOpslaan);
     setGeslacht(gekozenGeslacht);
     markeerProfielIngesteld();
     router.push('/');
@@ -26,7 +30,9 @@ export default function ProfielPagina() {
     setGekozenGeslacht(keuze);
   };
 
-  const isGereed = invoerNaam.trim().length > 0 && gekozenGeslacht !== null;
+  // Geslachtkeuze is wel verplicht (twee duidelijke knoppen, kind kan zelf kiezen).
+  // Naam mag leeg blijven — fallback is "Vriendje".
+  const isGereed = gekozenGeslacht !== null;
 
   return (
     <div className="h-full relative overflow-hidden flex flex-col items-center justify-center gap-10 p-8">
