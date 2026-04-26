@@ -2,14 +2,18 @@
 
 // components/RotatieOverlay.tsx — Toont een vriendelijke prompt wanneer het iPad
 // in portrait staat. De canvas-flow vereist landscape om de teken-ruimte
-// werkbaar te houden.
+// werkbaar te houden. Speelt ook een Nederlandse audio-prompt af zodat
+// pre-leerkinderen die de tekst niet kunnen lezen toch begrijpen wat te doen.
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useInstellingenStore } from '@/stores/instellingen-store';
 
 export default function RotatieOverlay() {
   const [isPortrait, setIsPortrait] = useState(false);
   const [isMobiel, setIsMobiel] = useState(false);
+  const audioAan = useInstellingenStore((s) => s.audioAan);
+  const heeftGesprokenRef = useRef(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -33,6 +37,41 @@ export default function RotatieOverlay() {
   }, []);
 
   const tonen = isPortrait && isMobiel;
+
+  // Speel "draai je iPad om" audio wanneer de overlay zichtbaar wordt.
+  // Eén keer per sessie; reset wanneer de overlay verdwijnt zodat een
+  // tweede portrait-detectie opnieuw kan spreken.
+  useEffect(() => {
+    if (!tonen) {
+      heeftGesprokenRef.current = false;
+      return;
+    }
+    if (!audioAan) return;
+    if (heeftGesprokenRef.current) return;
+    if (typeof window === 'undefined' || !window.speechSynthesis) return;
+
+    heeftGesprokenRef.current = true;
+
+    // Korte vertraging zodat de visuele animatie eerst landt
+    const timer = setTimeout(() => {
+      const synth = window.speechSynthesis;
+      synth.cancel();
+      const stemmen = synth.getVoices();
+      const nlStem =
+        stemmen.find((s) => s.lang === 'nl-NL' && s.localService) ||
+        stemmen.find((s) => s.lang === 'nl-NL') ||
+        stemmen.find((s) => s.lang.startsWith('nl'));
+
+      const uiting = new SpeechSynthesisUtterance('Draai je iPad om alsjeblieft');
+      uiting.lang = 'nl-NL';
+      uiting.rate = 0.85;
+      uiting.pitch = 1.05;
+      if (nlStem) uiting.voice = nlStem;
+      synth.speak(uiting);
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [tonen, audioAan]);
 
   return (
     <AnimatePresence>

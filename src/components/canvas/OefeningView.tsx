@@ -128,11 +128,32 @@ export default function OefeningView({
   // Instellingen ophalen voor evaluatiedrempels en hand-voorkeur
   const evaluatieInstellingen = useInstellingenStore((state) => state.evaluatie);
   const dominanteHand = useInstellingenStore((state) => state.dominanteHand);
+  const audioAan = useInstellingenStore((state) => state.audioAan);
 
   const isNaschrijven = niveau === 'naschrijven';
   // Linkshandig kind: voorbeeld rechts, canvas links zodat de tekenende hand
   // het voorbeeld niet bedekt.
   const voorbeeldRechts = dominanteHand === 'links';
+
+  // Adaptive difficulty: na herhaald falen verlagen we de effectieve drempel.
+  // Counter wordt vanzelf gereset bij niveau-wisseling omdat OefeningPagina
+  // dit component remount via een key. Doel: een 3,5-jarige die drie keer
+  // mislukt op hetzelfde niveau krijgt iets makkelijker een succes-ervaring,
+  // zodat ze niet ontmoedigd raken en de app verlaten (zie [[Lessons]] —
+  // persona "Noor" uit het peuter-panel).
+  const [mislukkingenDitNiveau, setMislukkingenDitNiveau] = useState(0);
+
+  // Multiplier op de drempel: 1.0 → 0.95 → 0.85 → 0.75 bij 0/1/2/3+ mislukkingen.
+  const drempelMultiplier =
+    mislukkingenDitNiveau >= 3 ? 0.75 :
+    mislukkingenDitNiveau >= 2 ? 0.85 :
+    mislukkingenDitNiveau >= 1 ? 0.95 : 1.0;
+
+  // Audio-bescherming: tekenen pas mogelijk nadat de intro-instructie heeft
+  // kunnen afspelen. Voorkomt dat een 3-jarige direct begint te tekenen en
+  // daarmee de instructie-audio cancelled (zie persona "Mees" uit panel).
+  // Als audio uit staat: geen wachttijd, kind kan meteen tekenen.
+  const [introBezig, setIntroBezig] = useState(audioAan);
 
   // Canvas afmetingen berekenen: ~80% van viewport hoogte minus header (64px)
   const headerHoogte = 64;
@@ -179,8 +200,17 @@ export default function OefeningView({
   // dus vermenigvuldigen met de schaalfactor voor canvas-ruimte
   const geschaaldeProximityMarge = evaluatieInstellingen.proximityMarge * schaal;
 
-  // Audio met vertraging afspelen bij laden
+  // Audio-instructie afspelen bij laden, en kort het canvas blokkeren zodat
+  // de instructie kan landen zonder onmiddellijk gecanceld te worden door
+  // een random eerste streek.
   useEffect(() => {
+    if (!audioAan) {
+      // Geen audio = geen wachttijd
+      setIntroBezig(false);
+      return;
+    }
+
+    setIntroBezig(true);
     const audioType =
       niveau === 'overtrekken'
         ? 'niveau1_instructie'
@@ -188,13 +218,22 @@ export default function OefeningView({
         ? 'niveau2_instructie'
         : 'niveau3_instructie';
 
-    // 500ms vertraging voor een natuurlijker gevoel
-    const timer = setTimeout(() => {
+    // 500ms vertraging voor natuurlijke pacing
+    const playTimer = setTimeout(() => {
       audioSpeelFn?.(audioType);
     }, 500);
 
-    return () => clearTimeout(timer);
-  }, [niveau, audioSpeelFn]);
+    // Intro-blokkade na 3.5s opheffen — voldoende voor de meeste instructies
+    // ("Trek de letter A na over de stipjes!" duurt ~2.5s + 500ms vertraging).
+    const eindTimer = setTimeout(() => {
+      setIntroBezig(false);
+    }, 3500);
+
+    return () => {
+      clearTimeout(playTimer);
+      clearTimeout(eindTimer);
+    };
+  }, [niveau, audioSpeelFn, audioAan]);
 
   const handleStreekKlaar = useCallback(
     (punten: TekenPunt[]) => {
@@ -221,7 +260,6 @@ export default function OefeningView({
       let geslaagd = false;
 
       if (niveau === 'overtrekken') {
-        // Voeg alle gebruikerspunten samen voor de dekkingsberekening
         const allePunten = huidigeStreken.flat();
 
         const resultaat = evalueerOvertrekking(
@@ -230,18 +268,20 @@ export default function OefeningView({
           geschaaldeProximityMarge
         );
 
-        geslaagd = resultaat.dekking >= evaluatieInstellingen.overtrekDrempel;
+        // Adaptive: drempel verlagen na herhaald falen
+        const effectieveDrempel = evaluatieInstellingen.overtrekDrempel * drempelMultiplier;
+        geslaagd = resultaat.dekking >= effectieveDrempel;
       } else {
-        // Naschrijven of zelfstandig: similarity-evaluatie
-        const drempel =
+        const baseDrempel =
           niveau === 'naschrijven'
             ? evaluatieInstellingen.naschrijfDrempel
             : evaluatieInstellingen.freehandDrempel;
+        const effectieveDrempel = baseDrempel * drempelMultiplier;
 
         const resultaat = evalueerSimilarity(
           huidigeStreken,
           item.streken,
-          drempel,
+          effectieveDrempel,
           niveau
         );
 
@@ -251,11 +291,12 @@ export default function OefeningView({
       setDisabled(true);
 
       if (geslaagd) {
+        setMislukkingenDitNiveau(0);
         setBeloningType(niveau === 'zelfstandig' ? 'confetti' : 'ster');
         setToonBeloning(true);
         audioSpeelFn?.('succes');
-        // Feedback overlay pas NA de beloningsanimatie (3 sec)
       } else {
+        setMislukkingenDitNiveau((n) => n + 1);
         audioSpeelFn?.('aanmoediging');
         setFeedback('aanmoediging');
       }
@@ -266,6 +307,7 @@ export default function OefeningView({
       geschaaldeTemplatePunten,
       geschaaldeProximityMarge,
       evaluatieInstellingen,
+      drempelMultiplier,
       item.streken,
     ]
   );
@@ -444,7 +486,10 @@ export default function OefeningView({
             />
           )}
 
-          {/* Interactieve tekenlaag */}
+          {/* Interactieve tekenlaag.
+              Tijdens introBezig (terwijl de instructie-audio nog wordt afgespeeld)
+              is het canvas tijdelijk disabled — voorkomt dat een 3-jarige
+              direct begint te tekenen en daarmee de instructie-audio cancelled. */}
           <TekenCanvas
             ref={tekenCanvasRef}
             breedte={canvasBreedte}
@@ -452,8 +497,37 @@ export default function OefeningView({
             kleur={tekenKleur}
             lijnDikte={lijnDikte}
             onStreekKlaar={handleStreekKlaar}
-            disabled={disabled}
+            disabled={disabled || introBezig}
           />
+
+          {/* Luister-indicator tijdens intro: subtiele oor-pulse rechtsboven.
+              Communiceert non-verbaal "even luisteren" zonder tekst. */}
+          {introBezig && (
+            <motion.div
+              className="absolute top-3 left-3 z-30 flex items-center justify-center pointer-events-none"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: [0.9, 1.05, 0.9], opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{ scale: { duration: 1.2, repeat: Infinity, ease: 'easeInOut' }, opacity: { duration: 0.3 } }}
+            >
+              <div
+                className="rounded-full flex items-center justify-center"
+                style={{
+                  width: 44,
+                  height: 44,
+                  background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
+                  boxShadow: '0 4px 14px -4px rgba(245, 158, 11, 0.45)',
+                }}
+              >
+                {/* Speaker-icoon met geluidsgolven */}
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B45309" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="#B45309" />
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                </svg>
+              </div>
+            </motion.div>
+          )}
 
           {/* Beloningsanimatie — feedback overlay pas NA animatie */}
           <BeloningAnimatie
